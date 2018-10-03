@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "hostingPlanName": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "skuName": {
+            "value": "F1"
+        },
+        "skuCapacity": {
+            "value": 1
+        },
+        "administratorLogin": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "administratorLoginPassword": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "databaseName": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "collation": {
+            "value": "SQL_Latin1_General_CP1_CI_AS"
+        },
+        "edition": {
+            "value": "Basic"
+        },
+        "maxSizeBytes": {
+            "value": "1073741824"
+        },
+        "requestedServiceObjectiveName": {
+            "value": "Basic"
+        }
+    }
+}

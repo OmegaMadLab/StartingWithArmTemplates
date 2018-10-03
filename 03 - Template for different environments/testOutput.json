@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "hostingPlanName": {
+        "type": "string",
+        "minLength": 1
+      },
+      "webAppName": {
+        "metadata": {
+          "description": "Web application name"
+        },
+        "type": "string"
+      },
+      "environment": {
+          "metadata": {
+            "description": "The environment object of the deployment"
+          },
+          "type": "string",
+          "allowedValues": [
+              "PROD",
+              "TEST"
+          ]
+      }
+    },
+    "variables": {
+      "environmentSettings": {
+          "TEST": [
+            {
+                "skuName": "B1",
+                "skuCapacity": 1,
+                "region": "westeurope"
+            }
+          ],
+          "PROD": [
+            {
+                "skuName": "S1",
+                "skuCapacity": 1,
+                "region": "westeurope"
+            },
+            {
+                "skuName": "S1",
+                "skuCapacity": 1,
+                "region": "northeurope"
+            }
+          ]
+        }
+    },
+    "resources": [],
+    "outputs": {
+        "string": {
+            "value": "[variables('environmentSettings')[parameters('environment')][0].skuName]",
+            "type": "string"
+        }
+    }
+  }
+  

@@ -1,0 +1,154 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "hostingPlanName": {
+        "type": "string",
+        "minLength": 1
+      },
+      "webAppName": {
+        "metadata": {
+          "description": "Web application name"
+        },
+        "type": "string",
+        "minLength": 1
+      },
+      "environment": {
+          "metadata": {
+            "description": "The environment object of the deployment"
+          },
+          "type": "string",
+          "allowedValues": [
+              "PROD",
+              "TEST"
+          ]
+      }
+    },
+    "variables": {
+      "environmentSettings": {
+          "TEST": [
+            {
+                "skuName": "B1",
+                "skuCapacity": 1,
+                "region": "westeurope"
+            }
+          ],
+          "PROD": [
+            {
+                "skuName": "S1",
+                "skuCapacity": 1,
+                "region": "westeurope"
+            },
+            {
+                "skuName": "S1",
+                "skuCapacity": 1,
+                "region": "northeurope"
+            }
+          ]
+      },
+      "copy": [
+        {
+            "name": "plansRef",
+            "count": "[length(variables('environmentSettings')[parameters('environment')])]",
+            "input": {
+                "name": "[concat(parameters('hostingPlanName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('plansRef')].region, '-', copyIndex('plansRef'))]",
+                "id": "[resourceId('Microsoft.Web/serverfarms/', concat(parameters('hostingPlanName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('plansRef')].region, '-', copyIndex('plansRef')))]"
+            }
+        },
+        {
+            "name": "websitesRef",
+            "count": "[length(variables('environmentSettings')[parameters('environment')])]",
+            "input": {
+                "name": "[concat(parameters('webAppName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('websitesRef')].region, '-', uniqueString(resourceGroup().id))]",
+                "id": "[resourceId('Microsoft.Web/sites', concat(parameters('webAppName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('websitesRef')].region, '-', uniqueString(resourceGroup().id)))]"
+            }
+        }
+      ]
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-08-01",
+        "copy": {
+            "name": "hostingplan",
+            "count": "[length(variables('environmentSettings')[parameters('environment')])]"
+        },
+        "name": "[variables('plansRef')[copyIndex('hostingplan')].name]",
+        "type": "Microsoft.Web/serverfarms",
+        "location": "[variables('environmentSettings')[parameters('environment')][copyIndex('hostingplan')].region]",
+        "sku": {
+          "name": "[variables('environmentSettings')[parameters('environment')][copyIndex('hostingplan')].skuName]",
+          "capacity": "[variables('environmentSettings')[parameters('environment')][copyIndex('hostingplan')].skuCapacity]"
+        },
+        "properties": {
+          "name": "[variables('plansRef')[copyIndex('hostingplan')].name]"
+        }
+      },
+      {
+        "apiVersion": "2015-08-01",
+        "copy": {
+            "name": "website",
+            "count": "[length(variables('environmentSettings')[parameters('environment')])]"
+        },
+        "name": "[variables('websitesRef')[copyIndex('website')].name]",
+        "type": "Microsoft.Web/sites",
+        "location": "[variables('environmentSettings')[parameters('environment')][copyIndex('website')].region]",
+        "tags": {
+          "environment": "[parameters('environment')]"
+        },
+        "dependsOn": [
+            "[variables('plansRef')[copyIndex('website')].id]"
+        ],
+        "properties": {
+          "name": "[variables('websitesRef')[copyIndex('website')].name]",
+          "serverFarmId": "[variables('plansRef')[copyIndex('website')].id]"
+        }
+      },
+      {
+        "apiVersion": "2017-05-01",
+        "condition": "[if(equals(parameters('environment'), 'PROD'), bool('true'), bool('false'))]",
+        "name": "TrafficManager",
+        "type": "Microsoft.Network/trafficManagerProfiles",
+        "location": "global",
+        "tags": {
+          "displayName": "TrafficManager"
+        },
+        "properties": {
+          "profileStatus": "Enabled",
+          "trafficRoutingMethod": "Weighted",
+          "dnsConfig": {
+            "relativeName": "[concat('TrafficManager', uniqueString(resourceGroup().id))]"
+          },
+          "monitorConfig": {
+            "profileMonitorStatus": null,
+            "protocol": "HTTP",
+            "port": 80,
+            "path": "/",
+            "intervalInSeconds": 30,
+            "toleratedNumberOfFailures": 3,
+            "timeoutInSeconds": 10
+          },
+          "copy": [
+                {
+                  "name": "endpoints",
+                  "count": "[length(variables('environmentSettings')[parameters('environment')])]",
+                  "input": {
+                      "name": "[concat(copyIndex('endpoints'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('endpoints')].region, '-Endpoint')]",
+                      "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                      "properties": {
+                          "endpointStatus": "Enabled",
+                          "endpointMonitorStatus": "Stopped",
+                          "targetResourceId": "[variables('websitesRef')[copyIndex('endpoints')].id]",
+                          "weight": 1,
+                          "priority": "[copyIndex('endpoints', 1)]",
+                          "endpointLocation": "[variables('environmentSettings')[parameters('environment')][copyIndex('endpoints')].region]"
+                      }
+                  
+                  }
+                }
+            ]
+        },
+        "dependsOn": ["website"]
+      }
+    ]
+  }
+  
