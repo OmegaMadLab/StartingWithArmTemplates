@@ -2,11 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "envPrefix": {
-            "value": "AzureSatPnDemo"
-        },
-        "genericVmSize": {
-            "value": "standard_F2"
+        "vmName": {
+            "value": "AzSatPn02-VM"
         },
         "adminUserName": {
             "value": "contosoadmin"
@@ -16,15 +13,6 @@
         },
         "domainName": {
             "value": "contoso.local"
-        },
-        "vnetName": {
-            "value": "adVnet"
-        },
-        "subnetName": {
-            "value": "adSubnet"
-        },
-        "vnetResourceGroup": {
-            "value": "ActiveDirectory-RG"
         }
     }
 }

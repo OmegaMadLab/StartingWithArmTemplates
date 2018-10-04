@@ -53,17 +53,16 @@
         }
     },
     "variables": {
-        "diagStorageName": "[take(concat(parameters('envPrefix'),'diagsa',uniqueString(resourceGroup().id)),24)]",
-        "diagStorageUri": "[concat('https', '://',variables('diagStorageName'),'.blob.core.windows.net', '/')]",
+        "diagStorageName": "[take(concat(toLower(parameters('envPrefix')),'diagsa',uniqueString(resourceGroup().id)),24)]",
         "vmName": "[concat(parameters('envPrefix'),'-VM')]",
-        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/demoEnv/master/sidit17/scripts/ADDomainJoin.ps1.zip",
+        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/wip/05_DSC_Domain_join/DSCResources/ADDomainJoin.ps1.zip",
         "adJoinConfigurationFunction": "ADDomainJoin.ps1\\ADDomainJoin"
     },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[variables('vmName')]",
-            "apiVersion": "2017-12-01",
+            "apiVersion": "2018-04-01",
             "location": "[resourceGroup().location]",
             "properties": {
         
@@ -74,7 +73,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
+                        "sku": "2016-Datacenter-smalldisk",
                         "version": "latest"
                     },
                     "osDisk": {
@@ -109,13 +108,13 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[variables('diagStorageUri')]"
+                        "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('diagStorageName')), '2016-01-01').primaryEndpoints.blob]"
                     }
                 }
             },
             "resources": [
                 {
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "type": "extensions",
                     "name": "[concat(variables('vmName'),'/DomainJoin')]",
                     "apiVersion": "2017-12-01",
                     "location": "[resourceGroup().location]",
@@ -126,7 +125,7 @@
                 
                         "publisher": "Microsoft.Powershell",
                         "type": "DSC",
-                        "typeHandlerVersion": "2.19",
+                        "typeHandlerVersion": "2.76",
                         "autoUpgradeMinorVersion": false,
                         "settings": {
                             "modulesURL": "[variables('adJoinModulesURL')]",

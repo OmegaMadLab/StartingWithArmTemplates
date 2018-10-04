@@ -8,3 +8,4 @@ It doesn't want to be a complete list, and probably you can find better instrume
   * ARM snippets loaded (follow [these](https://github.com/Azure/azure-xplat-arm-tooling) instructions)
 * **PowerShell** - at least 5.1 version to have a rich experience with DSC configurations - or **Azure Cloud Shell**
 * A public or private **repository** for templates/artifacts; it can be a GitHub repo as well as a simple storage account.
+* [ARM Template reference](https://docs.microsoft.com/en-us/azure/templates/)

@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "pleaseInsertLowerCaseText": {
+           "type": "string",
+           "metadata": {
+                "description": "Insert lowercase text"
+            }
+        },
+        "checkLowerCaseText": {
+           "type": "bool",
+           "metadata": {
+                "description": "Input validation"
+            },
+            "AllowedValues": [
+                true
+            ],
+            "defaultValue": "[if(equals(toLower(parameters('pleaseInsertLowerCaseText')), parameters('pleaseInsertLowerCaseText')), bool('true'), bool('false'))]"
+        }
+    },
+    "variables": {},
+    "functions": [],
+    "resources": [],
+    "outputs": {
+        "OutString": {
+           "type": "string",
+           "value": "[if(parameters('checkLowerCaseText'), parameters('pleaseInsertLowerCaseText'), 'Text contains uppercase chars')]"
+        }
+    }
+}
