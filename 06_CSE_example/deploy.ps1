@@ -1,13 +1,12 @@
 ### Example 1
 
-## Deploy a VM which will execute CSE
-# $DemoRgName = "AzSatPN-CSE-RG"
-#New-AzResourceGroup -Name $DemoRgName -Location "westeurope"
+Deploy a VM which will execute CSE
+$DemoRgName = "AzSatPN-CSE-RG"
+New-AzResourceGroup -Name $DemoRgName -Location "westeurope"
 
-# New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
-#     -TemplateFile (Get-Item .\newVm-domainJoin.json).FullName `
-#     -TemplateParameterFile (Get-Item .\newVm-domainJoin.parameters.json).FullName `
-#     -AsJob
+New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
+    -TemplateFile (Get-Item .\newVm-withCSE.json).FullName `
+    -TemplateParameterFile (Get-Item .\newVm-withCSE.parameters.json).FullName
 
 ### Example 2
 

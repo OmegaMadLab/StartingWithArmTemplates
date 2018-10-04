@@ -115,7 +115,7 @@
             "resources": [
                 {
                     "type": "extensions",
-                    "name": "[concat(variables('vmName'),'/DomainJoin')]",
+                    "name": "DomainJoin",
                     "apiVersion": "2017-12-01",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [

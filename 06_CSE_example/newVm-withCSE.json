@@ -48,7 +48,8 @@
     },
     "variables": {
         "diagStorageName": "[take(concat(toLower(parameters('envPrefix')),'diagsa',uniqueString(resourceGroup().id)),24)]",
-        "vmName": "[concat(parameters('envPrefix'),'-VM')]"
+        "vmName": "[concat(parameters('envPrefix'),'-VM')]",
+        "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/wip/06_CSE_example/CSEResources"
     },
     "resources": [
         {
@@ -104,7 +105,35 @@
                     }
                 }
             },
-            "resources": [],
+            "resources": [
+                {
+                    "apiVersion": "2015-06-15",
+                    "type": "extensions",
+                    "name": "CSEexample",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
+                    ],
+                    "tags": {
+                        "displayName": "CSE-example"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.9",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[concat(variables('cseBaseUrl'), '/TestFile.txt')]",
+                                "[concat(variables('cseBaseUrl'), '/Read-File.ps1')]"
+                            ]
+                        },
+                        "protectedSettings": {
+                            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File Read-File.ps1"
+                        }
+                    }
+                }
+            ],
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmName'),'-NIC'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageName'))]"
