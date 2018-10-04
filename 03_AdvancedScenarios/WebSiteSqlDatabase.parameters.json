@@ -3,22 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "hostingPlanName": {
-            "value": "## TO BE DEFINED ##"
+            "value": "HostPlan"
         },
         "skuName": {
-            "value": "F1"
+            "value": "S1"
         },
         "skuCapacity": {
             "value": 1
         },
         "administratorLogin": {
-            "value": "## TO BE DEFINED ##"
+            "value": "adminSql"
         },
         "administratorLoginPassword": {
-            "value": "## TO BE DEFINED ##"
+            "value": "Passw0rd!"
         },
         "databaseName": {
-            "value": "## TO BE DEFINED ##"
+            "value": "db"
         },
         "collation": {
             "value": "SQL_Latin1_General_CP1_CI_AS"

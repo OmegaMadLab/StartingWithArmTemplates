@@ -1,3 +1,16 @@
+### Multi-tier template
+$Rg = "AzureSatPN-SimpleWebAppSqlDB-RG"
+
+$Template = Get-Item -Path ".\WebSiteSqlDatabase.json"
+$Parameters = Get-Item -Path ".\WebSiteSqlDatabase.parameters.json"
+
+# Define RG 
+New-AzResourceGroup -Name $Rg -Location "westeurope"
+
+# Invoke deployment
+New-AzResourceGroupDeployment -ResourceGroupName $Rg -TemplateFile $Template.FullName -TemplateParameterFile $Parameters.FullName
+
+
 ### Multi-environment template
 
 $RgTest = "AzureSatPN-MultiEnv-TEST-RG"
