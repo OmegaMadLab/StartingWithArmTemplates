@@ -10,7 +10,7 @@
         }
     },
     "variables": {
-        "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/wip/06_CSE_example/CSEResources"
+        "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/CSEResources"
     },
     "resources": [
         {

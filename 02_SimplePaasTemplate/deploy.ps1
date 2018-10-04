@@ -1,4 +1,4 @@
-$Rg = "AzureSatPN-SimpleWebAppSqlDB"
+$Rg = "AzureSatPN-SimpleWebAppSqlDB-RG"
 
 $Template = Get-Item -Path ".\WebSiteSqlDatabase.json"
 $Parameters = Get-Item -Path ".\WebSiteSqlDatabase.parameters.json"

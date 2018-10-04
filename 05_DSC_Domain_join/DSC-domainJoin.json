@@ -28,7 +28,7 @@
         }
     },
     "variables": {
-        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/wip/05_DSC_Domain_join/DSCResources/ADDomainJoin.ps1.zip",
+        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_Domain_join/DSCResources/ADDomainJoin.ps1.zip",
         "adJoinConfigurationFunction": "ADDomainJoin.ps1\\ADDomainJoin"
     },
     "resources": [
