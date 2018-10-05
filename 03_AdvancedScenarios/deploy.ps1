@@ -8,7 +8,7 @@ $Parameters = Get-Item -Path ".\WebSiteSqlDatabase.parameters.json"
 New-AzResourceGroup -Name $Rg -Location "westeurope"
 
 # Invoke deployment
-New-AzResourceGroupDeployment -ResourceGroupName $Rg -TemplateFile $Template.FullName -TemplateParameterFile $Parameters.FullName
+New-AzResourceGroupDeployment -ResourceGroupName $Rg -TemplateFile $Template.FullName -TemplateParameterFile $Parameters.FullName -AsJob
 
 
 ### Multi-environment template

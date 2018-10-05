@@ -1,6 +1,6 @@
 ### Example 1
 
-Deploy a VM which will execute CSE
+#Deploy a VM which will execute CSE
 $DemoRgName = "AzureSatPN-CSE-RG"
 New-AzResourceGroup -Name $DemoRgName -Location "westeurope"
 
@@ -11,7 +11,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
 ### Example 2
 
 ## Deploy a DSC resource on an existing VM - Using one of the VM generated during previous examples
-$DemoRgName = "AzureSatPN-DomainJoined-RG"
+$DemoRgName = "AzureSatPN-DomainJoin-RG"
 
 New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
     -TemplateFile (Get-Item .\CSE-ReadFile.json).FullName `
