@@ -53,7 +53,7 @@
     },
     "variables": {
       "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
-      "sqlConnectionString": "[concat('Data Source=tcp:', parameters('sqlParameters').sqlUri, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('administratorLogin'), '@', parameters('sqlParameters').SqlServerName, ';Password=', parameters('administratorLoginPassword'), ';')]",
+      "sqlConnectionString": "[concat('Data Source=tcp:', parameters('sqlParameters').SqlUri, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('administratorLogin'), '@', parameters('sqlParameters').SqlServerName, ';Password=', parameters('administratorLoginPassword'), ';')]",
       "appServicePlanId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
       "testSlotName": "TestEnvironment"
     },
