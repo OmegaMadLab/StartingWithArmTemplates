@@ -151,7 +151,7 @@
                         "value": "[parameters('databaseName')]"
                     },
                     "sqlParameters": {
-                        "value": "[reference('SqlLinkedTemplate').outputs.sqlParameters]"
+                        "value": "[reference('SqlLinkedTemplate').outputs.sqlParameters.value]"
                     }
                 }
             }
