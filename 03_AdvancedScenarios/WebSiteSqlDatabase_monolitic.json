@@ -92,8 +92,7 @@
         "type": "Microsoft.Sql/servers",
         "location": "[resourceGroup().location]",
         "tags": {
-          "displayName": "SqlServer",
-          "environment": "test"
+          "displayName": "SqlServer"
         },
         "apiVersion": "2014-04-01-preview",
         "properties": {

@@ -54,8 +54,7 @@
         "type": "Microsoft.Sql/servers",
         "location": "[resourceGroup().location]",
         "tags": {
-          "displayName": "SqlServer",
-          "environment": "test"
+          "displayName": "SqlServer"
         },
         "apiVersion": "2014-04-01-preview",
         "properties": {
@@ -102,7 +101,7 @@
          "type": "object",
          "value": {
             "SqlUri": "[reference(resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName]",
-            "SqlServerName": "[reference(resourceId('Microsoft.Sql/servers/', variables('sqlserverName'))).Name]"
+            "SqlServerName": "[variables('sqlserverName')]"
           }
       }
     }

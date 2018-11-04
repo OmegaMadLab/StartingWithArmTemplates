@@ -85,7 +85,7 @@
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "SqlServerLinkedTemplate",
+            "name": "SqlLinkedTemplate",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -122,6 +122,9 @@
             "apiVersion": "2017-05-10",
             "name": "WebLinkedTemplate",
             "type": "Microsoft.Resources/deployments",
+            "dependsOn": [
+                "SqlLinkedTemplate"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
