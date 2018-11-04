@@ -1,6 +1,6 @@
 ### Example 1
 
-#Deploy a VM which will execute CSE
+#Deploy a VM which will execute the CSE
 $DemoRgName = "ArmDemo-CSE-RG"
 New-AzResourceGroup -Name $DemoRgName -Location "westeurope"
 
@@ -10,7 +10,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
 
 ### Example 2
 
-## Deploy a DSC resource on an existing VM - Using one of the VM generated during previous examples
+## Deploy the CSE resource on an existing VM - Using one of the VM generated during previous examples
 $DemoRgName = "ArmDemo-DomainJoin-RG"
 
 New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `

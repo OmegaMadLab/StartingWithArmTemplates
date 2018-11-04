@@ -9,7 +9,8 @@ New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
 ## Formal error: trying to deploy a standard Windows image on a small disk
 New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
     -TemplateFile (Get-Item .\newVm-resourceError.json).FullName `
-    -TemplateParameterFile (Get-Item .\newVm.parameters.json).FullName
+    -TemplateParameterFile (Get-Item .\newVm.parameters.json).FullName `
+    -asJob
 
 ## Input validation
 New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `

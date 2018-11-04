@@ -10,6 +10,7 @@ New-AzResourceGroup -Name $Rg -Location "westeurope"
 # Invoke deployment
 New-AzResourceGroupDeployment -ResourceGroupName $Rg -TemplateFile $Template.FullName -TemplateParameterFile $Parameters.FullName -AsJob
 
+
 ### Multi-tier template - linked approach
 $Rg = "ArmDemo-SimpleWebAppSqlDB-linked-RG"
 
