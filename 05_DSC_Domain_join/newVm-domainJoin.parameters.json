@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "envPrefix": {
-            "value": "AzSatPn01"
+            "value": "ArmDemo01"
         },
         "genericVmSize": {
             "value": "standard_F2"

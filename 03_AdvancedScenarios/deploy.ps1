@@ -1,7 +1,7 @@
-### Multi-tier template
-$Rg = "AzureSatPN-SimpleWebAppSqlDB-RG"
+### Multi-tier template - monolitic approach
+$Rg = "ArmDemo-SimpleWebAppSqlDB-monolitic-RG"
 
-$Template = Get-Item -Path ".\WebSiteSqlDatabase.json"
+$Template = Get-Item -Path ".\WebSiteSqlDatabase_monolitich.json"
 $Parameters = Get-Item -Path ".\WebSiteSqlDatabase.parameters.json"
 
 # Define RG 
@@ -13,8 +13,8 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg -TemplateFile $Template.Ful
 
 ### Multi-environment template
 
-$RgTest = "AzureSatPN-MultiEnv-TEST-RG"
-$RgProd = "AzureSatPN-MultiEnv-PROD-RG"
+$RgTest = "ArmDemo-MultiEnv-TEST-RG"
+$RgProd = "ArmDemo-MultiEnv-PROD-RG"
 
 $Template = Get-Item -Path ".\differentEnv.json"
 $ParametersTest = Get-Item -Path ".\differentEnv.parameters-TEST.json"
@@ -43,7 +43,7 @@ Get-Job | Receive-Job
 
 
 ### Update existing resources in two steps (contains inline nested template)
-$Rg = "AzureSatPN-UpdateResource-RG"
+$Rg = "ArmDemo-UpdateResource-RG"
 New-AzResourceGroup -Name $Rg -Location "westeurope"
 
 $Template = Get-Item -Path ".\updateResource.json"

@@ -1,4 +1,4 @@
-$Rg = "AzureSatPN-SimpleTemplate-RG"
+$Rg = "ArmDemo-SimpleTemplate-RG"
 
 $Template = Get-Item -Path ".\storageAccount.json"
 $Parameters = Get-Item -Path ".\storageAccount.parameters.json"

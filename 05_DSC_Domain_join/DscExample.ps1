@@ -1,6 +1,8 @@
 configuration Name {
     # One can evaluate expressions to get the node list
     # E.g: $AllNodes.Where("Role -eq Web").NodeName
+    Import-Module PSDesiredStateConfiguration
+    
     node ("Node1","Node2","Node3")
     {
         # Call Resource Provider

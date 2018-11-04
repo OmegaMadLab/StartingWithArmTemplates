@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "storageAccountPrefix": {
-            "value": "azuresatpndemo"
+            "value": "armdemoomegamadlab"
         },
         "storageAccountType": {
             "value": "Standard_LRS"

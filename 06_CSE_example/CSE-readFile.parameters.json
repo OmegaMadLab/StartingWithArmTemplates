@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vmName": {
-            "value": "AzSatPn01-VM"
+            "value": "ArmDemo01-VM"
         }
     }
 }

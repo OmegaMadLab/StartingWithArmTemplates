@@ -14,7 +14,7 @@ New-AzResourceGroupDeployment -ResourceGroupName "ActiveDirectory-RG" `
 ### Example 1
 
 # Deploy a VM which will join the domain via template
-$DemoRgName = "AzureSatPN-DomainJoin-RG"
+$DemoRgName = "ArmDemo-DomainJoin-RG"
 New-AzResourceGroup -Name $DemoRgName -Location "westeurope"
 
 New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
@@ -25,7 +25,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
 ### Example 2
 
 # Deploy a VM not joined to the domain
-$DemoRgName = "AzureSatPN-NotJoined-RG"
+$DemoRgName = "ArmDemo-NotJoined-RG"
 New-AzResourceGroup -Name $DemoRgName -Location "westeurope"
 
 New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
@@ -33,7 +33,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
     -TemplateParameterFile (Get-Item .\newVm-toBeJoined.parameters.json).FullName
 
 ## Deploy a DSC resource on an existing VM
-$DemoRgName = "AzureSatPN-NotJoined-RG"
+$DemoRgName = "ArmDemo-NotJoined-RG"
 
 New-AzResourceGroupDeployment -ResourceGroupName $DemoRgName `
     -TemplateFile (Get-Item .\DSC-domainJoin.json).FullName `

@@ -1,4 +1,4 @@
-$DemoRgName = "AzureSatPN-Troubleshoot-RG"
+$DemoRgName = "ArmDemo-Troubleshoot-RG"
 New-AzResourceGroup -Name $DemoRgName -Location "westeurope"
 
 ## Validation error: variable not defined
