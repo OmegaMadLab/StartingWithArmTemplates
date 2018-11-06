@@ -1,7 +1,7 @@
 ### Multi-tier template - monolitic approach
 $Rg = "ArmDemo-SimpleWebAppSqlDB-monolitic-RG"
 
-$Template = Get-Item -Path ".\WebSiteSqlDatabase_monolitich.json"
+$Template = Get-Item -Path ".\WebSiteSqlDatabase_monolitic.json"
 $Parameters = Get-Item -Path ".\WebSiteSqlDatabase.parameters.json"
 
 # Define RG 

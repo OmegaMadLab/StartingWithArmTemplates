@@ -1,25 +1,22 @@
-configuration Name {
-    # One can evaluate expressions to get the node list
-    # E.g: $AllNodes.Where("Role -eq Web").NodeName
-    Import-Module PSDesiredStateConfiguration
-    
-    node ("Node1","Node2","Node3")
-    {
-        # Call Resource Provider
-        # E.g: WindowsFeature, File
-        WindowsFeature FriendlyName
-        {
+Configuration WebsiteTest {
+
+    # Import the module that contains the resources we're using.
+    Import-DscResource -ModuleName PsDesiredStateConfiguration
+
+    # The Node statement specifies which targets this configuration will be applied to.
+    Node 'localhost' {
+
+        # The first resource block ensures that the Web-Server (IIS) feature is enabled.
+        WindowsFeature WebServer {
             Ensure = "Present"
-            Name = "Feature Name"
+            Name   = "Web-Server"
         }
 
-        File FriendlyName
-        {
-            Ensure = "Present"
-            SourcePath = $SourcePath
-            DestinationPath = $DestinationPath
-            Type = "Directory"
-            DependsOn = "[WindowsFeature]FriendlyName"
+        # The second resource block ensures that the website content copied to the website root folder.
+        File WebsiteContent {
+            Ensure = 'Present'
+            SourcePath = 'c:\test\index.htm'
+            DestinationPath = 'c:\inetpub\wwwroot'
         }
     }
 }

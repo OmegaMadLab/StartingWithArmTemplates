@@ -23,6 +23,9 @@
     "variables": {
       "storageAccountName": "[take(concat(toLower(parameters('storageAccountPrefix')), uniqueString(resourceGroup().id)), 24)]"
     },
+    "functions": [
+
+    ],
     "resources": [
       {
         "type": "Microsoft.Storage/storageAccounts",
