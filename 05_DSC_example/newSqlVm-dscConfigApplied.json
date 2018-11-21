@@ -20,16 +20,16 @@
                 "description": "Local and domain admin password"
             }
         },
-        "sqlLoginName": {
-            "type": "string",
-            "metadata": {
-                "description": "SQL Login username"
+        "tcpPort": {
+            "type": "int",
+            "metadata": {      
+                "description": "TCP port for SQL Server instance"
             }
         },
-        "sqlLoginPassword": {
-            "type": "securestring",
+        "maxDop": {
+            "type": "int",
             "metadata": {      
-                "description": "SQL Login password"
+                "description": "Max DOP for SQL Server instance"
             }
         }
     },
@@ -120,17 +120,16 @@
                                 "script": "[variables('SqlDscConfigScript')]",
                                 "function": "[variables('SqlDscConfigFunction')]"
                             },
-                            "configurationArguments": {}
-                            },
-                            "protectedSettings": {
+                            "configurationArguments": {
+                                "MaxDop": "[parameters('maxDop')]",
+                                "TcpPort": "[parameters('tcpPort')]"
+                            }
+                        },
+                        "protectedSettings": {
                             "configurationArguments": {
                                 "SysAdminCreds": {
                                     "userName": "[concat(parameters('vmName'), '\\', parameters('adminUserName'))]",
                                     "Password": "[parameters('adminPassword')]"
-                                },
-                                "NewLoginCreds": {
-                                    "userName": "[parameters('sqlLoginName')]",
-                                    "Password": "[parameters('sqlLoginPassword')]"
                                 }
                             }
                         }

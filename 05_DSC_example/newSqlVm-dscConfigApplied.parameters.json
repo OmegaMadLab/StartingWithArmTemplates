@@ -11,11 +11,11 @@
         "adminPassword": {
             "value": "Passw0rd1"
         },
-        "sqlLoginName": {
-            "value": "DemoSqlLogin"
+        "tcpPort": {
+            "value": 2226
         },
-        "sqlLoginPassword": {
-            "value": "Passw0rd2"
+        "maxDop": {
+            "value": 1
         }
     }
 }
