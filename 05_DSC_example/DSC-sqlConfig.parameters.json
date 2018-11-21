@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vmName": {
-            "value": "ArmSqlDscDemo"
+            "value": "SqlArmIaaSInt"
         },
         "adminUserName": {
             "value": "localadmin"
@@ -12,7 +12,7 @@
             "value": "Passw0rd1"
         },
         "sqlLoginName": {
-            "value": "DemoSqlLogin"
+            "value": "sqlAdmin"
         },
         "sqlLoginPassword": {
             "value": "Passw0rd2"

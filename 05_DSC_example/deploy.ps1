@@ -71,5 +71,5 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 
 ## Deploy a DSC resource which adds a new SQL login with sysadmin privileges and sets MaxDOP = 1 on an existing VM
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
-    -TemplateFile (Get-Item .\DSC-domainJoin.json).FullName `
-    -TemplateParameterFile (Get-Item .\DSC-domainJoin.parameters.json).FullName
+    -TemplateFile (Get-Item .\DSC-sqlConfig.json).FullName `
+    -TemplateParameterFile (Get-Item .\DSC-sqlConfig.parameters.json).FullName

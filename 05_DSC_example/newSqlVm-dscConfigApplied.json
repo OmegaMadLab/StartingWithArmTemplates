@@ -125,12 +125,12 @@
                             "protectedSettings": {
                             "configurationArguments": {
                                 "SysAdminCreds": {
-                                "userName": "[concat(parameters('vmName'), '\\', parameters('adminUserName'))]",
-                                "Password": "[parameters('adminPassword')]"
+                                    "userName": "[concat(parameters('vmName'), '\\', parameters('adminUserName'))]",
+                                    "Password": "[parameters('adminPassword')]"
                                 },
                                 "NewLoginCreds": {
-                                "userName": "[parameters('sqlLoginName')]",
-                                "Password": "[parameters('sqlLoginPassword')]"
+                                    "userName": "[parameters('sqlLoginName')]",
+                                    "Password": "[parameters('sqlLoginPassword')]"
                                 }
                             }
                         }

@@ -20,12 +20,6 @@
                 "description": "Local and domain admin password"
             }
         },
-        "domainName": {
-            "type": "string",
-            "metadata": {
-                "description": "AD domain name"
-            }
-        },
         "sqlLoginName": {
             "type": "string",
             "metadata": {

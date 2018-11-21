@@ -1,18 +1,21 @@
+$HelperModulePath = (Get-Item "..\99_HelperScripts\ArmTemplateDemoPsUtilities.psm1").FullName
+Import-Module $HelperModulePath
+
 ### Storage Account demo
-$Rg = "ArmDemo-SimpleTemplate-RG"
+$RgName = "ArmDemo-SimpleTemplate-RG"
 
 $Template = Get-Item -Path ".\storageAccount.json"
 $Parameters = Get-Item -Path ".\storageAccount.parameters.json"
 
 # Define RG 
-New-AzResourceGroup -Name $Rg -Location "westeurope"
+$Rg = Set-AzureRg -Name $RgName
 
 # Invoke deployment
-New-AzResourceGroupDeployment -ResourceGroupName $Rg `
+New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName
 
 # With parameter file
-New-AzResourceGroupDeployment -ResourceGroupName $Rg `
+New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName `
     -TemplateParameterFile $Parameters.FullName
 
@@ -23,18 +26,13 @@ $Template = Get-Item -Path ".\simpleSQL.json"
 $Parameters = Get-Item -Path ".\simpleSQL.parameters.json"
 
 # Define RG 
-$rg = Get-AzResourceGroup -Name $RgName `
-        -Location "westeurope" `
-        -ErrorAction SilentlyContinue
-if(!$rg) {
-    New-AzResourceGroup -Name $RgName -Location "westeurope"
-}
+$Rg = Set-AzureRg -Name $RgName
 
 # Invoke deployment
-New-AzResourceGroupDeployment -ResourceGroupName $Rg `
+New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName
 
 # With parameter file
-New-AzResourceGroupDeployment -ResourceGroupName $RgName `
+New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName `
     -TemplateParameterFile $Parameters.FullName
