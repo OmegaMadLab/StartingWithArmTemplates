@@ -19,18 +19,6 @@
             "metadata": {      
                 "description": "Local and domain admin password"
             }
-        },
-        "sqlLoginName": {
-            "type": "string",
-            "metadata": {
-                "description": "SQL Login username"
-            }
-        },
-        "sqlLoginPassword": {
-            "type": "securestring",
-            "metadata": {      
-                "description": "SQL Login password"
-            }
         }
     },
     "variables": {
@@ -41,10 +29,7 @@
         "vmSize": "Standard_DS2_v2",
         "nicName": "[concat(parameters('vmName'), '-NIC')]",
         "publicIPAddressName": "[concat(parameters('vmName'), '-PIP')]",
-        "diagStorageName": "[take(concat(toLower(parameters('vmName')),'diagsa',uniqueString(resourceGroup().id)),24)]",      
-        "sqlConfigModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_example/DSCResources/SqlConfig.ps1.zip",
-        "SqlDscConfigScript": "SqlConfig.ps1",
-        "SqlDscConfigFunction": "SqlServerConfig"
+        "diagStorageName": "[take(concat(toLower(parameters('vmName')),'diagsa',uniqueString(resourceGroup().id)),24)]"
     },
     "resources": [
         {
@@ -99,44 +84,7 @@
                     }
                 }
             },
-            "resources": [
-                {
-                    "type": "extensions",
-                    "name": "SqlConfig",
-                    "apiVersion": "2017-12-01",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-                    ],
-                    "properties": {
-                
-                        "publisher": "Microsoft.Powershell",
-                        "type": "DSC",
-                        "typeHandlerVersion": "2.76",
-                        "autoUpgradeMinorVersion": false,
-                        "settings": {
-                            "configuration": {
-                                "url": "[variables('sqlConfigModulesURL')]",
-                                "script": "[variables('SqlDscConfigScript')]",
-                                "function": "[variables('SqlDscConfigFunction')]"
-                            },
-                            "configurationArguments": {}
-                            },
-                            "protectedSettings": {
-                            "configurationArguments": {
-                                "SysAdminCreds": {
-                                "userName": "[parameters('adminUserName')]",
-                                "Password": "[parameters('adminPassword')]"
-                                },
-                                "NewLoginCreds": {
-                                "userName": "[parameters('sqlLoginName')]",
-                                "Password": "[parameters('sqlLoginPassword')]"
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
+            "resources": [],
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageName'))]"
@@ -175,7 +123,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[variables('publicIPAddressName')]",
-            "apiVersion": "2017-06-01",
+            "apiVersion": "2017-03-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic",

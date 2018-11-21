@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "value": "ArmSqlDscDemo"
+        },
+        "adminUserName": {
+            "value": "localadmin"
+        },
+        "adminPassword": {
+            "value": "Passw0rd1"
+        },
+        "sqlLoginName": {
+            "value": "sysAdmin"
+        },
+        "sqlLoginPassword": {
+            "value": "Passw0rd2"
+        }
+    }
+}
