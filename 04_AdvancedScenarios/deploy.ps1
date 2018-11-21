@@ -24,10 +24,10 @@ New-AzResourceGroup -Name $Rg -Location "westeurope"
 New-AzResourceGroupDeployment -ResourceGroupName $Rg -TemplateFile $Template.FullName -TemplateParameterFile $Parameters.FullName -AsJob
 
 
-### Multi-environment template
+### Multi-environment template - WebApp
 
-$RgTest = "ArmDemo-MultiEnv-TEST-RG"
-$RgProd = "ArmDemo-MultiEnv-PROD-RG"
+$RgTest = "ArmDemo-MultiEnv-Web-TEST-RG"
+$RgProd = "ArmDemo-MultiEnv-Web-PROD-RG"
 
 $Template = Get-Item -Path ".\differentEnv.json"
 $ParametersTest = Get-Item -Path ".\differentEnv.parameters-TEST.json"
@@ -45,7 +45,34 @@ New-AzResourceGroupDeployment -ResourceGroupName $RgTest `
     -TemplateParameterFile $ParametersTest.FullName `
     -AsJob
 
+# Invoke prod deployment
+New-AzResourceGroupDeployment -ResourceGroupName $RgProd `
+    -TemplateFile $Template.FullName `
+    -TemplateParameterFile $ParametersProd.FullName `
+    -AsJob
+
+### Multi-environment template - SQL
+
+$RgTest = "ArmDemo-MultiEnv-SQL-TEST-RG"
+$RgProd = "ArmDemo-MultiEnv-SQL-PROD-RG"
+
+$Template = Get-Item -Path ".\sqlDifferentEnv.json"
+$ParametersTest = Get-Item -Path ".\sqlDifferentEnv.parameters-TEST.json"
+$ParametersProd = Get-Item -Path ".\sqlDifferentEnv.parameters-PROD.json"
+
+# Define RG for test
+New-AzResourceGroup -Name $RgTest -Location "westeurope"
+
+# Define RG for prod
+New-AzResourceGroup -Name $RgProd -Location "westeurope"
+
 # Invoke test deployment
+New-AzResourceGroupDeployment -ResourceGroupName $RgTest `
+    -TemplateFile $Template.FullName `
+    -TemplateParameterFile $ParametersTest.FullName `
+    -AsJob
+
+# Invoke prod deployment
 New-AzResourceGroupDeployment -ResourceGroupName $RgProd `
     -TemplateFile $Template.FullName `
     -TemplateParameterFile $ParametersProd.FullName `

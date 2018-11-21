@@ -12,7 +12,7 @@
             "defaultValue": "standard_F2",
             "type": "string",
             "metadata": {      
-                "description": "VM size used for DC, DSC server, Frontend servers"
+                "description": "VM size"
             }
         }, 
         "adminUserName": {

@@ -1,0 +1,155 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "environmentPrefix": {
+        "type": "string",
+        "minLength": 1
+      },
+      "administratorLogin": {
+        "type": "string"
+      },
+      "administratorLoginPassword": {
+        "type": "securestring"
+      },
+      "environment": {
+          "metadata": {
+            "description": "The environment object of the deployment"
+          },
+          "type": "string",
+          "allowedValues": [
+              "PROD",
+              "TEST"
+          ]
+      }
+    },
+    "variables": {
+      "databaseName": "[concat(parameters('environmentPrefix'), '-db-', parameters('environment'))]",
+      "collation": "SQL_Latin1_General_CP1_CI_AS",
+      "maxSizeBytes": "1073741824",
+      "failoverPolicy": "Automatic",
+      "failoverWithDataLossGracePeriodMinutes": 60,
+      "serverSettings": {
+          "TEST": [
+            {
+                "region": "westeurope"
+            }
+          ],
+          "PROD": [
+            {
+                "region": "westeurope"
+            },
+            {
+                "region": "westcentralus"
+            }
+          ]
+      },
+      "databaseSettings": {
+          "TEST": {
+                "dbEdition": "basic",
+                "dbTier": "basic"
+          },
+          "PROD": {
+                "dbEdition": "standard",
+                "dbTier": "S1"
+          }
+      },
+      "copy": [
+        {
+            "name": "sqlServerRef",
+            "count": "[length(variables('serverSettings')[parameters('environment')])]",
+            "input": {
+                "name": "[toLower(concat(parameters('environmentPrefix'), '-sqlserver-', parameters('environment'), '-', variables('serverSettings')[parameters('environment')][copyIndex('sqlServerRef')].region))]",
+                "id": "[resourceId('Microsoft.Sql/servers/', toLower(concat(parameters('environmentPrefix'), '-sqlserver-', parameters('environment'), '-', variables('serverSettings')[parameters('environment')][copyIndex('sqlServerRef')].region)))]"
+            }
+        }
+      ]
+    },
+    "resources": [
+      {
+        "copy": {
+          "name": "sqlServer",
+          "count": "[length(variables('serverSettings')[parameters('environment')])]"
+        },
+        "name": "[variables('sqlServerRef')[copyIndex('sqlServer')].name]",
+        "type": "Microsoft.Sql/servers",
+        "location": "[variables('serverSettings')[parameters('environment')][copyIndex('sqlServer')].region]",
+        "apiVersion": "2014-04-01",
+        "properties": {
+          "administratorLogin": "[parameters('administratorLogin')]",
+          "administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+        },
+        "resources": []
+      },
+      {
+        "copy": {
+          "name": "firewallRule",
+          "count": "[length(variables('serverSettings')[parameters('environment')])]"
+        },
+        "type": "Microsoft.Sql/servers/firewallRules",
+        "apiVersion": "2014-04-01",
+        "dependsOn": [
+          "sqlServer"
+        ],
+        "location": "[variables('serverSettings')[parameters('environment')][copyIndex('firewallRule')].region]",
+        "name": "[concat(variables('sqlServerRef')[copyIndex('firewallRule')].name, '/', variables('serverSettings')[parameters('environment')][copyIndex('firewallRule')].region, '-AllowAll')]",
+        "properties": {
+          "startIpAddress": "0.0.0.0",
+          "endIpAddress": "255.255.255.255"
+        }
+      },
+      {
+        "name": "[concat(variables('sqlServerRef')[0].name  ,'/', variables('databaseName'))]",
+        "type": "Microsoft.Sql/servers/databases",
+        "location": "[variables('serverSettings')[parameters('environment')][0].region]",
+        "apiVersion": "2014-04-01",
+        "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers/', variables('sqlServerRef')[0].name)]"
+        ],
+        "properties": {
+          "edition": "[variables('databaseSettings')[parameters('environment')].dbEdition]",
+          "requestedServiceObjectiveName": "[variables('databaseSettings')[parameters('environment')].dbTier]",
+          "collation": "[variables('collation')]",
+          "maxSizeBytes": "[variables('maxSizeBytes')]"
+        }
+      },
+      {
+        "name": "[toLower(concat(variables('sqlServerRef')[0].name  ,'/', parameters('environmentPrefix'),'-fgprod-listener'))]",
+        "type": "Microsoft.Sql/servers/failoverGroups",
+        "apiVersion": "2015-05-01-preview",
+        "condition": "[if(equals(parameters('environment'), 'PROD'), bool('true'), bool('false'))]",
+        "dependsOn": [
+          "sqlServer",
+          "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerRef')[0].name, variables('databaseName'))]"
+        ],
+        "properties": {
+          "readWriteEndpoint": {
+            "failoverPolicy": "[variables('failoverPolicy')]",
+            "failoverWithDataLossGracePeriodMinutes": "[variables('failoverWithDataLossGracePeriodMinutes')]"
+          },
+          "readOnlyEndpoint": {
+            "failoverPolicy": "Enabled"
+          },
+          "partnerServers": [
+            {
+              "id": "[variables('sqlServerRef')[1].id]"
+            }
+          ],
+          "databases": [
+            "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerRef')[0].name, variables('databaseName'))]"
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "primaryEndopoint": {
+         "type": "string",
+         "value": "[concat(toLower(if(equals(toUpper(parameters('environment')), 'PROD'), concat(parameters('environmentPrefix'),'-fgprod-listener'), variables('sqlServerRef')[0].name)), '.database.windows.net')]"
+      },
+      "SecondaryEndopoint": {
+        "type": "string",
+        "value": "[if(equals(toUpper(parameters('environment')), 'PROD'), toLower(concat(parameters('environmentPrefix'),'-fgprod-listener.secondary.database.windows.net')), 'NotAvailable')]"
+      }
+    }
+  }
+  

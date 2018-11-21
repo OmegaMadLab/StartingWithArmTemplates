@@ -12,7 +12,7 @@
             "defaultValue": "standard_F2",
             "type": "string",
             "metadata": {      
-                "description": "VM size used for DC, DSC server, Frontend servers"
+                "description": "VM size"
             }
         }, 
         "adminUserName": {
@@ -55,7 +55,7 @@
     "variables": {
         "diagStorageName": "[take(concat(toLower(parameters('envPrefix')),'diagsa',uniqueString(resourceGroup().id)),24)]",
         "vmName": "[concat(parameters('envPrefix'),'-VM')]",
-        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_Domain_join/DSCResources/ADDomainJoin.ps1.zip",
+        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_example/DSCResources/ADDomainJoin.ps1.zip",
         "adJoinConfigurationFunction": "ADDomainJoin.ps1\\ADDomainJoin"
     },
     "resources": [

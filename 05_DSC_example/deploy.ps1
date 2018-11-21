@@ -1,3 +1,5 @@
+##### Domain join example
+
 ### PREREQ
 
 # Create a new AD forest on a brand new VM
