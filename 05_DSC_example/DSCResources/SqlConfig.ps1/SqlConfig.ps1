@@ -19,17 +19,15 @@ Configuration SqlServerConfig {
     Node 'localhost' {
 
         # The first resource block change TCP port on default instance.
+        SqlServerNetwork 'ChangeTcpIpOnDefaultInstance'
         {
-            SqlServerNetwork 'ChangeTcpIpOnDefaultInstance'
-            {
-                InstanceName         = 'MSSQLSERVER'
-                ProtocolName         = 'Tcp'
-                IsEnabled            = $true
-                TCPDynamicPort       = $false
-                TCPPort              = $TcpPort
-                RestartService       = $true
-                PsDscRunAsCredential = $SystemAdministratorAccount
-            }
+            InstanceName         = 'MSSQLSERVER'
+            ProtocolName         = 'Tcp'
+            IsEnabled            = $true
+            TCPDynamicPort       = $false
+            TCPPort              = $TcpPort
+            RestartService       = $true
+            PsDscRunAsCredential = $SystemAdministratorAccount
         }
 
         # The second resource block depends on first, and sets MaxDOP
