@@ -41,7 +41,7 @@
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('vmName'),'/DomainJoin')]",
+            "name": "[concat(parameters('vmName'),'/SqlConfig')]",
             "apiVersion": "2018-04-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
