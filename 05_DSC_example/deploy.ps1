@@ -65,8 +65,9 @@ $RgName = "ArmDemo-SqlIaasIntegration2-RG"
 $Rg = Set-AzureRg -Name $RgName
 
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
-    -TemplateFile (Get-Item .\newVm-toBeJoined.json).FullName `
-    -TemplateParameterFile (Get-Item .\newVm-toBeJoined.parameters.json).FullName
+    -TemplateFile (Get-Item .\newSqlVm.json).FullName `
+    -TemplateParameterFile (Get-Item .\newSqlVm.parameters.json).FullName `
+    -AsJob
 
 ## Deploy a DSC resource which adds a new SQL login with sysadmin privileges and sets MaxDOP = 1 on an existing VM
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `

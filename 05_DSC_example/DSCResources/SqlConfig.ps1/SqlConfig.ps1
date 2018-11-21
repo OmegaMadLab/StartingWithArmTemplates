@@ -20,6 +20,9 @@ Configuration SqlServerConfig {
             Ensure = 'Present'
             Name = $NewLoginCreds.UserName
             LoginType = 'SqlLogin'
+            LoginMustChangePassword        = $false
+            LoginPasswordExpirationEnabled = $false
+            LoginPasswordPolicyEnforced    = $false
             LoginCredential = $NewLoginCreds
             ServerName           = $env:COMPUTERNAME
             InstanceName         = 'MSSQLSERVER'

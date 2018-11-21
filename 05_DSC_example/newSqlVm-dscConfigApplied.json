@@ -125,7 +125,7 @@
                             "protectedSettings": {
                             "configurationArguments": {
                                 "SysAdminCreds": {
-                                "userName": "[parameters('adminUserName')]",
+                                "userName": "[concat(parameters('vmName'), '\\', parameters('adminUserName'))]",
                                 "Password": "[parameters('adminPassword')]"
                                 },
                                 "NewLoginCreds": {
