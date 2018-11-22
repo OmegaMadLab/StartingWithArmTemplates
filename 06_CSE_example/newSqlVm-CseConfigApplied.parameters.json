@@ -3,19 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vmName": {
-            "value": "## TO BE DEFINED ##"
+            "value": "ArmSqlCseDemo"
         },
         "adminUserName": {
-            "value": "## TO BE DEFINED ##"
+            "value": "localadmin"
         },
         "adminPassword": {
-            "value": "## TO BE DEFINED ##"
+            "value": "Passw0rd1"
         },
         "tcpPort": {
-            "value": "## TO BE DEFINED ##"
+            "value": 2226
         },
         "maxDop": {
-            "value": "## TO BE DEFINED ##"
+            "value": 1
         }
     }
 }
