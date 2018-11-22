@@ -24,7 +24,13 @@
 $logFile = ".\SqlConfig.log"
 
 "Looking for NuGet package manager..." | Out-File -FilePath $LogFile 
-if((Get-PackageProvider -Name NuGet -ListAvailable).Version.toString().Replace(".","") -lt 285201) {
+$packageProvider = Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue
+if(!$packageProvider) {
+    $packageProviderVersion = "0"
+} else {
+    $packageProviderVersion = ($packageProvider).Version.toString().Replace(".","")
+}
+if($packageProviderVersion -lt 285201) {
     "NuGet version 2.8.5.201 or higher not found. Trying to install it..." | Out-File -FilePath $LogFile -Append
     try {
         Install-PackageProvider -Name NuGet -Force -MinimumVersion 2.8.5.201
