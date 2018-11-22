@@ -67,7 +67,7 @@ $SysAdminCreds = New-Object System.Management.Automation.PSCredential($SysAdminU
 
 Set-DbaTcpPort -SqlInstance $ENV:COMPUTERNAME `
     -Port $TcpPort `
-    -SqlCredential $SysAdminCreds |
+    -Credential $SysAdminCreds |
     Out-File -FilePath $LogFile -Append
 
 Set-DbaMaxDop -SqlInstance $ENV:COMPUTERNAME `
