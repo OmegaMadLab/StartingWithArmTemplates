@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "adminUserName": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "adminPassword": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "tcpPort": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "maxDop": {
+            "value": "## TO BE DEFINED ##"
+        }
+    }
+}

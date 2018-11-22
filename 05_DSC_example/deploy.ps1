@@ -45,7 +45,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 
 
 
-##### SQL Server example
+##### SQL Server examples
 
 ### Example 1
 
