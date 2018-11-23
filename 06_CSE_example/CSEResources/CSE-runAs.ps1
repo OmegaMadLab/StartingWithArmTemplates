@@ -18,8 +18,16 @@ param (
 )
 
 $Credential = New-Object System.Management.Automation.PSCredential($Username, ($Password | ConvertTo-SecureString -AsPlainText -Force))
-$Args = "-executionPolicy Unrestricted -file $ScriptToRun"
 
-$Args | Out-File .\Degug.txt
+#Execution with different account
+Enable-PSRemoting -Force
+$DomainName = [System.String] (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain;
+Enable-WSManCredSSP -Role Client -DelegateComputer "*.$DomainName" -Force
+Enable-WSManCredSSP -Role Server -Force
 
-Start-Process -Credential $Credential -NoNewWindow -WorkingDirectory .\ -FilePath powershell.exe -ArgumentList $Args 
+Invoke-Command -ScriptBlock { $ScriptToRun }
+    -Credential $credential `
+    -ComputerName $env:COMPUTERNAME
+
+Disable-WSManCredSSP -Role Client
+Disable-WSManCredSSP -Role Server

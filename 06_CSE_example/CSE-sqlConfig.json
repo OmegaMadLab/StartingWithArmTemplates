@@ -35,7 +35,7 @@
     },
     "variables": {
         "dscModuleUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/DSCResources/credSspDsc.zip",
-        "dscConfigScript": "CredSspConfig.ps1",
+        "dscConfigScript": "CredSspDsc.ps1",
         "dscConfigFunction": "CredSspConfig",
         "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/CSEResources",
         "cseRunAsScript": "CSE-runAs.ps1",
@@ -62,8 +62,6 @@
                         "function": "[variables('dscConfigFunction')]"
                     },
                     "configurationArguments": {
-                        "MaxDop": "[parameters('maxDop')]",
-                        "TcpPort": "[parameters('tcpPort')]"
                     }
                 },
                 "protectedSettings": {
