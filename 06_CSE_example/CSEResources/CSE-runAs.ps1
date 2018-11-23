@@ -35,7 +35,8 @@ $WorkingPath = (Push-Location -PassThru).Path
 Invoke-Command -FilePath ".\$ScriptToRun" `
     -ArgumentList $ScriptParams `
     -Credential $credential `
-    -ComputerName $env:COMPUTERNAME
+    -ComputerName $env:COMPUTERNAME `
+    -Authentication Credssp
 
 Disable-WSManCredSSP -Role Client
 Disable-WSManCredSSP -Role Server

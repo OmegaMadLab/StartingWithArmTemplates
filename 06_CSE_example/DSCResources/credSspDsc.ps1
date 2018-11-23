@@ -2,11 +2,16 @@ configuration CredSspConfig
 {
     param
     (
-        [String]$DomainName=$ENV:COMPUTERNAME,
-
-        [String]$DomainNetbiosName=(Get-NetBIOSName -DomainName $DomainName)
+        [String]$DomainName="WORKGROUP"
 
     )
+
+    if($DomainName -eq "WORKGROUP") {
+        $WsManList = "WSMAN/$env:COMPUTERNAME"
+    } else {
+        $WsManList = "WSMAN/*.$DomainName"
+    }
+    
 
     Import-DscResource -ModuleName PSDesiredStateConfiguration
 
@@ -32,7 +37,7 @@ configuration CredSspConfig
             Ensure = "Present"
             Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentials"
             ValueName = "1"
-            ValueData = "WSMAN/*.$DomainName"
+            ValueData = $WsManList
             ValueType = "String"
             DependsOn = "[Registry]CredSSP1"
         }
@@ -41,9 +46,23 @@ configuration CredSspConfig
             Ensure = "Present"
             Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly"
             ValueName = "1"
-            ValueData = "WSMAN/*.$DomainName"
+            ValueData = $WsManList
             ValueType = "String"
             DependsOn = "[Registry]CredSSP2"
+        }
+
+        Script Reboot
+        {
+            TestScript = {
+                return (Test-Path HKLM:\SOFTWARE\MyMainKey\RebootKey)
+            }
+            SetScript = {
+                New-Item -Path HKLM:\SOFTWARE\MyMainKey\RebootKey -Force
+                 $global:DSCMachineStatus = 1 
+    
+            }
+            GetScript = { return @{result = 'result'}}
+            DependsOn = @('[Registry]CredSSP3', '[Registry]CredSSP4')
         }
 
         LocalConfigurationManager 
@@ -51,28 +70,5 @@ configuration CredSspConfig
             RebootNodeIfNeeded = $true
         }
 
-    }
-}
-function Get-NetBIOSName
-{ 
-    [OutputType([string])]
-    param(
-        [string]$DomainName
-    )
-
-    if ($DomainName.Contains('.')) {
-        $length=$DomainName.IndexOf('.')
-        if ( $length -ge 16) {
-            $length=15
-        }
-        return $DomainName.Substring(0,$length)
-    }
-    else {
-        if ($DomainName.Length -gt 15) {
-            return $DomainName.Substring(0,15)
-        }
-        else {
-            return $DomainName
-        }
     }
 }
