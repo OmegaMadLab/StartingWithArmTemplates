@@ -27,7 +27,14 @@ $Credential = New-Object System.Management.Automation.PSCredential($Username, ($
 #Execution with different account
 Enable-PSRemoting -Force
 $DomainName = [System.String] (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain;
-Enable-WSManCredSSP -Role Client -DelegateComputer "*.$DomainName" -Force
+
+if($DomainName -eq "WORKGROUP") {
+    $WsManList = "WSMAN/$env:COMPUTERNAME"
+} else {
+    $WsManList = "WSMAN/*.$DomainName"
+}
+
+Enable-WSManCredSSP -Role Client -DelegateComputer $WsManList -Force
 Enable-WSManCredSSP -Role Server -Force
 
 $WorkingPath = (Push-Location -PassThru).Path
