@@ -12,7 +12,6 @@ configuration CredSspConfig
         $WsManList = "WSMAN/*.$DomainName"
     }
     
-
     Import-DscResource -ModuleName PSDesiredStateConfiguration
 
     Node localhost

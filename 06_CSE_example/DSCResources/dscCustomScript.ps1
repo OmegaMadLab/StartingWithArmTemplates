@@ -22,6 +22,7 @@ Configuration DscAsCustomScript {
         # Set and Get functions are fake, just to be sure the Set function is executed
         script 'CustomScript'
         {
+            PsDscRunAsCredential = $SysAdminCreds
             GetScript = "@{}"
             TestScript = "$false"
             SetScript = {
@@ -77,7 +78,6 @@ Configuration DscAsCustomScript {
                     -MaxDop $MaxDop |
                     Out-File -FilePath $LogFile -Append
             }
-            PsDscRunAsCredential = $SysAdminCreds
         }
 
     }
