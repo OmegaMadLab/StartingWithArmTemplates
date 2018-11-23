@@ -6,6 +6,11 @@ param (
         [string]
         $ScriptToRun,
 
+        # Array of script parameters
+        [Parameter(Mandatory = $true)]
+        [string[]]
+        $ScriptParams,
+        
         # Username
         [Parameter(Mandatory = $true)]
         [string]
@@ -27,11 +32,10 @@ Enable-WSManCredSSP -Role Server -Force
 
 $WorkingPath = (Push-Location -PassThru).Path
 
-Start-Process powershell.exe -Credential $Credential `
-    -WorkingDirectory $WorkingPath `
-    -RedirectStandardOutput .\RunAsLog.txt `
-    -NoNewWindow `
-    -ArgumentList $ScriptToRun
+Invoke-Command -FilePath $ScriptToRun `
+    -ArgumentList $ScriptParams `
+    -Credential $credential `
+    -ComputerName $env:COMPUTERNAME
 
 Disable-WSManCredSSP -Role Client
 Disable-WSManCredSSP -Role Server
