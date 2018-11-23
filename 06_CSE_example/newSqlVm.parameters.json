@@ -5,17 +5,11 @@
         "vmName": {
             "value": "ArmSqlCseDemo2"
         },
-        "sysAdminUsername": {
+        "adminUserName": {
             "value": "localadmin"
         },
-        "sysAdminPassword": {
+        "adminPassword": {
             "value": "Passw0rd1"
-        },
-        "tcpPort": {
-            "value": 2226
-        },
-        "maxDop": {
-            "value": 1
         }
     }
 }

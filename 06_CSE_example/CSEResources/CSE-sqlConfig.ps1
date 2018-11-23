@@ -53,8 +53,6 @@ else {
     "DBATools module found." | Out-File -FilePath $LogFile -Append
 }
 
-$SysAdminCreds = New-Object System.Management.Automation.PSCredential($SysAdminUsername, ($SysAdminPassword | ConvertTo-SecureString -AsPlainText -Force))
-
 Set-DbaTcpPort -SqlInstance $ENV:COMPUTERNAME `
     -Port $TcpPort `
     -Confirm:$false |

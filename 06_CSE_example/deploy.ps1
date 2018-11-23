@@ -36,8 +36,17 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 
 ### Example 2
 
+# Deploy a SQL VM
+$RgName = "ArmDemo-SqlIaasIntegration3-RG"
+$Rg = Set-AzureRg -Name $RgName
+
+New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
+    -TemplateFile (Get-Item .\newSqlVm.json).FullName `
+    -TemplateParameterFile (Get-Item .\newSqlVm.parameters.json).FullName `
+    -AsJob
+
 ## Deploy the CSE resource on an existing VM - Using one of the VM generated during previous examples
-$RgName = "ArmDemo-SqlIaasIntegration2-RG"
+$RgName = "ArmDemo-SqlIaasIntegration3-RG"
 $Rg = Set-AzureRg -Name $RgName
 
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
