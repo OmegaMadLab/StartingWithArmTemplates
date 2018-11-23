@@ -37,7 +37,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 ### Example 2
 
 ## Deploy the CSE resource on an existing VM - Using one of the VM generated during previous examples
-$RgName = "ArmDemo-SqlIaasIntegration-RG"
+$RgName = "ArmDemo-SqlIaasIntegration2-RG"
 $Rg = Set-AzureRg -Name $RgName
 
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `

@@ -34,17 +34,50 @@
         }
     },
     "variables": {
+        "dscModuleUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/DSCResources/credSspDsc.zip",
+        "dscConfigScript": "CredSspConfig.ps1",
+        "dscConfigFunction": "CredSspConfig",
         "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/CSEResources",
-        "cseScript": "CSE-runAs.ps1",
-        "cseParameters": "[concat('-Username \"$($ENV:COMPUTERNAME)\\', parameters('sysAdminUsername'), '\" -Password \"', parameters('sysAdminPassword'), '-ScriptToRun \".\\CSE-sqlConfig.ps1 -TcpPort ', parameters('tcpPort'), ' -MaxDop ', parameters('maxDop'), '\"')]"
+        "cseRunAsScript": "CSE-runAs.ps1",
+        "cseSqlScript": "CSE-sqlConfig.ps1",
+        "cseParameters": "[concat('-Username \"$($ENV:COMPUTERNAME)\\', parameters('sysAdminUsername'), '\" -Password \"', parameters('sysAdminPassword'), '\" -ScriptToRun \".\\CSE-sqlConfig.ps1 -TcpPort ', parameters('tcpPort'), ' -MaxDop ', parameters('maxDop'), '\"')]"
     },
     "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('vmName'),'/CredSSP')]",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+        
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.76",
+                "autoUpgradeMinorVersion": false,
+                "settings": {
+                    "configuration": {
+                        "url": "[variables('dscModuleURL')]",
+                        "script": "[variables('dscConfigScript')]",
+                        "function": "[variables('dscConfigFunction')]"
+                    },
+                    "configurationArguments": {
+                        "MaxDop": "[parameters('maxDop')]",
+                        "TcpPort": "[parameters('tcpPort')]"
+                    }
+                },
+                "protectedSettings": {
+                }
+            }
+        },
         {
             "apiVersion": "2015-06-15",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('vmName'),'/CseSqlConfig')]",
             "location": "[resourceGroup().location]",
-            "dependsOn": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'CredSSP')]"
+            ],
             "tags": {
                 "displayName": "CSE-SqlConfig"
             },
@@ -55,11 +88,12 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                        "[concat(variables('cseBaseUrl'), '/', variables('cseScript'))]"
+                        "[concat(variables('cseBaseUrl'), '/', variables('cseRunAsScript'))]",
+                        "[concat(variables('cseBaseUrl'), '/', variables('cseSqlScript'))]"
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File .\\', variables('cseScript'), ' ', variables('cseParameters'))]"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File .\\', variables('cseRunAsScript'), ' ', variables('cseParameters'))]"
                 }
             }
         }        
@@ -67,7 +101,7 @@
     "outputs": {
         "CommandLine": {
            "type": "string",
-           "value": "[concat('powershell -ExecutionPolicy Unrestricted -File .\\', variables('cseScript'), ' ', variables('cseParameters'))]"
+           "value": "[concat('powershell -ExecutionPolicy Unrestricted -File .\\', variables('cseRunAsScript'), ' ', variables('cseParameters'))]"
         }
     }
 }
