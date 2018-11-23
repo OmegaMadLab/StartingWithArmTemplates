@@ -25,8 +25,8 @@ $DomainName = [System.String] (Get-CimInstance -ClassName Win32_ComputerSystem -
 Enable-WSManCredSSP -Role Client -DelegateComputer "*.$DomainName" -Force
 Enable-WSManCredSSP -Role Server -Force
 
-Invoke-Command -ScriptBlock { $ScriptToRun }
-    -Credential $credential `
+Invoke-Command -ScriptBlock { $ScriptToRun } `
+    -Credential $Credential `
     -ComputerName $env:COMPUTERNAME
 
 Disable-WSManCredSSP -Role Client
