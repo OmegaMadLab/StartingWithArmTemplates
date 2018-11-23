@@ -25,9 +25,13 @@ $DomainName = [System.String] (Get-CimInstance -ClassName Win32_ComputerSystem -
 Enable-WSManCredSSP -Role Client -DelegateComputer "*.$DomainName" -Force
 Enable-WSManCredSSP -Role Server -Force
 
-Invoke-Command -ScriptBlock { $ScriptToRun } `
-    -Credential $Credential `
-    -ComputerName $env:COMPUTERNAME
+$WorkingPath = (Push-Location -PassThru).Path
+
+Start-Process powershell.exe -Credential $Credential `
+    -WorkingDirectory $WorkingPath `
+    -RedirectStandardOutput .\RunAsLog.txt `
+    -NoNewWindow `
+    -ArgumentList $ScriptToRun
 
 Disable-WSManCredSSP -Role Client
 Disable-WSManCredSSP -Role Server
