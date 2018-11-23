@@ -18,6 +18,6 @@ param (
 )
 
 $Credential = New-Object System.Management.Automation.PSCredential($Username, ($Password | ConvertTo-SecureString -AsPlainText -Force))
-$Arguments = "-file $ScriptToRun"
+$Args = "-executionPolicy Unrestricted -file $ScriptToRun"
 
-Start-Process powershell.exe -ArgumentList $arguments -Credential $Credential -NoNewWindow
+Start-Process -Credential $Credential -NoNewWindow -WorkingDirectory .\ -FilePath powershell.exe -ArgumentList $Args 
