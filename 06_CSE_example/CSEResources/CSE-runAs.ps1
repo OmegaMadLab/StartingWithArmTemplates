@@ -20,4 +20,6 @@ param (
 $Credential = New-Object System.Management.Automation.PSCredential($Username, ($Password | ConvertTo-SecureString -AsPlainText -Force))
 $Args = "-executionPolicy Unrestricted -file $ScriptToRun"
 
+$Args | Out-File .\Degug.txt
+
 Start-Process -Credential $Credential -NoNewWindow -WorkingDirectory .\ -FilePath powershell.exe -ArgumentList $Args 
