@@ -1,15 +1,5 @@
 [CmdletBinding()]
     param (
-            # SysAdmin username
-            [Parameter(Mandatory = $true)]
-            [string]
-            $SysAdminUsername,
-
-            # SysAdmin Password
-            [Parameter(Mandatory = $true)]
-            [string]
-            $SysAdminPassword,
-
             # SQL TCP Port
             [Parameter(Mandatory = $true)]
             [int]
@@ -66,11 +56,9 @@ else {
 $SysAdminCreds = New-Object System.Management.Automation.PSCredential($SysAdminUsername, ($SysAdminPassword | ConvertTo-SecureString -AsPlainText -Force))
 
 Set-DbaTcpPort -SqlInstance $ENV:COMPUTERNAME `
-    -Port $TcpPort `
-    -Credential $SysAdminCreds |
+    -Port $TcpPort |
     Out-File -FilePath $LogFile -Append
 
 Set-DbaMaxDop -SqlInstance $ENV:COMPUTERNAME `
-    -MaxDop $MaxDop `
-    -SqlCredential $SysAdminCreds |
+    -MaxDop $MaxDop |
     Out-File -FilePath $LogFile -Append
