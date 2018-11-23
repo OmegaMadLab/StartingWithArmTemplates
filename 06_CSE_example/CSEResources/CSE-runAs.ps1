@@ -32,7 +32,7 @@ Enable-WSManCredSSP -Role Server -Force
 
 $WorkingPath = (Push-Location -PassThru).Path
 
-Invoke-Command -FilePath $ScriptToRun `
+Invoke-Command -FilePath ".\$ScriptToRun" `
     -ArgumentList $ScriptParams `
     -Credential $credential `
     -ComputerName $env:COMPUTERNAME

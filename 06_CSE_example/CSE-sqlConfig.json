@@ -40,7 +40,7 @@
         "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/CSEResources",
         "cseRunAsScript": "CSE-runAs.ps1",
         "cseSqlScript": "CSE-sqlConfig.ps1",
-        "cseParameters": "[concat('\"$($ENV:COMPUTERNAME)\\', parameters('sysAdminUsername'), '\",\"', parameters('sysAdminPassword'), '\",\".\\CSE-sqlConfig.ps1\",\"', parameters('tcpPort'), '\",\"', parameters('maxDop'), '\"')]"
+        "cseParameters": "[concat('-Username \"$($ENV:COMPUTERNAME)\\', parameters('sysAdminUsername'), '\" -Password \"', parameters('sysAdminPassword'), '\" -ScriptToRun \"CSE-sqlConfig.ps1\" -ScriptParams \"', parameters('tcpPort'), '\",\"', parameters('maxDop'), '\"')]"
     },
     "resources": [
         {
