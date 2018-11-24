@@ -7,7 +7,7 @@ configuration CredSspConfig
     )
 
     if($DomainName -eq "WORKGROUP") {
-        $WsManList = "WSMAN/$env:COMPUTERNAME"
+        $WsManList = "WSMAN/*"
     } else {
         $WsManList = "WSMAN/*.$DomainName"
     }
