@@ -53,12 +53,11 @@ configuration CredSspConfig
         Script Reboot
         {
             TestScript = {
-                return (Test-Path HKLM:\SOFTWARE\MyMainKey\RebootKey)
+                return $false
             }
             SetScript = {
                 New-Item -Path HKLM:\SOFTWARE\MyMainKey\RebootKey -Force
-                 $global:DSCMachineStatus = 1 
-    
+                $global:DSCMachineStatus = 1
             }
             GetScript = { return @{result = 'result'}}
             DependsOn = @('[Registry]CredSSP3', '[Registry]CredSSP4')

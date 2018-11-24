@@ -72,7 +72,7 @@ $Rg = Set-AzureRg -Name $RgName
 
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile (Get-Item .\newSqlVm.json).FullName `
-    -TemplateParameterFile (Get-Item .\newSqlVm.parameters.json).FullName `
+    -TemplateParameterFile (Get-Item .\newSqlVm-2.parameters.json).FullName `
     -AsJob
 
 ## Deploy the "hacked" DSC extension on an existing VM - Using one of the VM generated during previous examples
