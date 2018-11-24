@@ -65,8 +65,9 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateParameterFile (Get-Item .\newSqlVm-dscAsCustomScriptApplied.parameters.json).FullName `
     -AsJob
 
+### Example 2
 # Deploy a SQL VM
-$RgName = "ArmDemo-SqlIaasIntegration3-RG"
+$RgName = "ArmDemo-SqlIaasIntegration5-RG"
 $Rg = Set-AzureRg -Name $RgName
 
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
@@ -74,8 +75,8 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateParameterFile (Get-Item .\newSqlVm.parameters.json).FullName `
     -AsJob
 
-## Deploy the CSE resource on an existing VM - Using one of the VM generated during previous examples
-$RgName = "ArmDemo-SqlIaasIntegration3-RG"
+## Deploy the "hacked" DSC extension on an existing VM - Using one of the VM generated during previous examples
+$RgName = "ArmDemo-SqlIaasIntegration5-RG"
 $Rg = Set-AzureRg -Name $RgName
 
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
