@@ -27,7 +27,7 @@ Configuration SqlServerConfig {
             TCPDynamicPort       = $false
             TCPPort              = $TcpPort
             RestartService       = $true
-            PsDscRunAsCredential = $SystemAdministratorAccount
+            PsDscRunAsCredential = $SysAdminCreds
         }
 
         # The second resource block depends on first, and sets MaxDOP
