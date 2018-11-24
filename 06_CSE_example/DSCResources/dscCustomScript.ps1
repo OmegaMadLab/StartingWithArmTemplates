@@ -27,7 +27,7 @@ Configuration DscAsCustomScript {
             TestScript = { return $false }
             SetScript = {
                 
-                $logFile = ".\SqlConfig.log"
+                $logFile = "C:\SqlConfig.log"
 
                 "Looking for NuGet package manager..." | Out-File -FilePath $LogFile 
                 $packageProvider = Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue
@@ -70,12 +70,12 @@ Configuration DscAsCustomScript {
                 }
 
                 Set-DbaTcpPort -SqlInstance $ENV:COMPUTERNAME `
-                    -Port $TcpPort `
+                    -Port $($using:TcpPort) `
                     -Confirm:$false |
                     Out-File -FilePath $LogFile -Append
 
                 Set-DbaMaxDop -SqlInstance $ENV:COMPUTERNAME `
-                    -MaxDop $MaxDop |
+                    -MaxDop $($using:MaxDop) |
                     Out-File -FilePath $LogFile -Append
             }
         }
