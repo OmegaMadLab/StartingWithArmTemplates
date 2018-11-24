@@ -23,8 +23,8 @@ Configuration DscAsCustomScript {
         script 'CustomScript'
         {
             PsDscRunAsCredential = $SysAdminCreds
-            GetScript = "@{}"
-            TestScript = "$false"
+            GetScript =  { return @{result = 'result'} }
+            TestScript = { return $false }
             SetScript = {
                 
                 $logFile = ".\SqlConfig.log"
