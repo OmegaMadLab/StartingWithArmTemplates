@@ -80,5 +80,5 @@ $RgName = "ArmDemo-SqlIaasIntegration5-RG"
 $Rg = Set-AzureRg -Name $RgName
 
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
-    -TemplateFile (Get-Item .\CSE-sqlConfig.json).FullName `
-    -TemplateParameterFile (Get-Item .\CSE-sqlConfig.parameters.json).FullName
+    -TemplateFile (Get-Item .\DSC-customScript.json).FullName `
+    -TemplateParameterFile (Get-Item .\DSC-customScript.parameters.json).FullName
