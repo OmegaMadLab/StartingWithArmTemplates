@@ -11,7 +11,7 @@
             $MaxDop
     )
     
-$logFile = ".\SqlConfig.log"
+$logFile = "C:\SqlConfig.log"
 
 "Looking for NuGet package manager..." | Out-File -FilePath $LogFile 
 $packageProvider = Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue
