@@ -50,17 +50,31 @@ configuration CredSspConfig
             DependsOn = "[Registry]CredSSP2"
         }
 
+        Registry RebootKey {
+            Ensure = "Present"
+            Key = "HKEY_LOCAL_MACHINE\SOFTWARE\TestReboot\NeedReboot"
+            ValueName = "default"
+            ValueData = ""
+            ValueType = "String"
+            DependsOn = @('[Registry]CredSSP3', '[Registry]CredSSP4')
+        }
+
         Script Reboot
         {
             TestScript = {
-                return $false
+                $result = (Invoke-Expression -Command $GetScript)["Result"];
+                if($result)
+                {
+                    return $true;
+                }     
+                return $false;
             }
             SetScript = {
-                New-Item -Path HKLM:\SOFTWARE\MyMainKey\RebootKey -Force
+                Remove-Item -Path HKLM:\SOFTWARE\TestReboot\NeedReboot -Force
                 $global:DSCMachineStatus = 1
             }
-            GetScript = { return @{result = 'result'}}
-            DependsOn = @('[Registry]CredSSP3', '[Registry]CredSSP4')
+            GetScript = { return @{result = (!(Test-Path HKLM:\SOFTWARE\TestReboot\NeedReboot))} }
+            DependsOn = @('[Registry]RebootKey')
         }
 
         LocalConfigurationManager 
