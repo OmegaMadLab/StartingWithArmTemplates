@@ -1,10 +1,10 @@
 $HelperModulePath = (Get-Item "..\99_HelperScripts\ArmTemplateDemoPsUtilities.psm1").FullName
 Import-Module $HelperModulePath
 
-### Multi-tier template - monolitic approach
-$RgName = "ArmDemo-SimpleWebAppSqlDB-monolitic-RG"
+### Multi-tier template - monolithic approach
+$RgName = "ArmDemo-SimpleWebAppSqlDB-monolithic-RG"
 
-$Template = Get-Item -Path ".\WebSiteSqlDatabase_monolitic.json"
+$Template = Get-Item -Path ".\WebSiteSqlDatabase_monolithic.json"
 $Parameters = Get-Item -Path ".\WebSiteSqlDatabase.parameters.json"
 
 # Define RG 
