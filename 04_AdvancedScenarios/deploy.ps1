@@ -54,7 +54,7 @@ $ParametersProd = Get-Item -Path ".\differentEnv.parameters-PROD.json"
 $RgTest = Set-AzureRg -Name $RgTestName
 
 # Define RG for prod
-$RgProd = Set-AzureAg -Name $RgProdName
+$RgProd = Set-AzureRg -Name $RgProdName
 
 # Invoke test deployment
 New-AzResourceGroupDeployment -ResourceGroupName $RgTest.ResourceGroupName `
