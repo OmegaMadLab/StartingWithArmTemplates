@@ -14,7 +14,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -adminUserName "contosoAdmin" `
     -adminPassword $(ConvertTo-SecureString -AsPlainText "Passw0rd1" -Force) `
     -domainName "contoso.local" `
-    -dnsPrefix "contosodemodc" `
+    -dnsPrefix "contosodemodc$(-join ((1..9) | Get-Random -Count 8))" `
     -AsJob
 
 ### Example 1
@@ -26,6 +26,11 @@ $Rg = Set-AzureRg -Name $RgName
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile (Get-Item .\newVm-domainJoin.json).FullName `
     -TemplateParameterFile (Get-Item .\newVm-domainJoin.parameters.json).FullName `
+    -AsJob
+
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
     -AsJob
 
 ### Example 2
@@ -43,7 +48,10 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile (Get-Item .\DSC-domainJoin.json).FullName `
     -TemplateParameterFile (Get-Item .\DSC-domainJoin.parameters.json).FullName
 
-
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
+    -AsJob
 
 ##### SQL Server examples
 
@@ -56,6 +64,11 @@ $Rg = Set-AzureRg -Name $RgName
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile (Get-Item .\newSqlVm-dscConfigApplied.json).FullName `
     -TemplateParameterFile (Get-Item .\newSqlVm-dscConfigApplied.parameters.json).FullName `
+    -AsJob
+
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
     -AsJob
 
 ### Example 2
@@ -73,3 +86,8 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile (Get-Item .\DSC-sqlConfig.json).FullName `
     -TemplateParameterFile (Get-Item .\DSC-sqlConfig.parameters.json).FullName
+
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
+    -AsJob

@@ -79,8 +79,8 @@
       }
     },
     "variables": {
-      "sqlTemplatelink": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/03_AdvancedScenarios/SQL_child.json",
-      "webTemplatelink": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/03_AdvancedScenarios/WebSite_child.json"
+      "sqlTemplatelink": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/04_AdvancedScenarios/SQL_child.json",
+      "webTemplatelink": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/04_AdvancedScenarios/WebSite_child.json"
     },
     "resources": [
         {

@@ -16,6 +16,11 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateParameterFile $Parameters.FullName `
     -AsJob
 
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
+    -AsJob
+
 ### Multi-tier template - linked approach
 $RgName = "ArmDemo-SimpleWebAppSqlDB-linked-RG"
 
@@ -31,6 +36,10 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateParameterFile $Parameters.FullName `
     -AsJob
 
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
+    -AsJob
 
 ### Multi-environment template - WebApp
 
@@ -57,6 +66,14 @@ New-AzResourceGroupDeployment -ResourceGroupName $RgTest.ResourceGroupName `
 New-AzResourceGroupDeployment -ResourceGroupName $RgProd.ResourceGroupName `
     -TemplateFile $Template.FullName `
     -TemplateParameterFile $ParametersProd.FullName `
+    -AsJob
+
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgTest `
+    -Force `
+    -AsJob
+Remove-AzResourceGroup -Name $RgProd `
+    -Force `
     -AsJob
 
 ### Multi-environment template - SQL
@@ -89,6 +106,14 @@ New-AzResourceGroupDeployment -ResourceGroupName $RgProd.ResourceGroupName `
 # Check status
 Get-Job | Receive-Job
 
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgTest `
+    -Force `
+    -AsJob
+Remove-AzResourceGroup -Name $RgProd `
+    -Force `
+    -AsJob
+
 
 ### Update existing resources in two steps (contains inline nested template)
 $RgName = "ArmDemo-UpdateResource-RG"
@@ -97,4 +122,9 @@ $Rg = Set-AzureRg -Name $RgName
 $Template = Get-Item -Path ".\updateResource.json"
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName `
+    -AsJob
+
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
     -AsJob

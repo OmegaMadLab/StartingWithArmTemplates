@@ -19,6 +19,11 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName `
     -TemplateParameterFile $Parameters.FullName
 
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
+    -AsJob
+
 ### Azure SQL Database demo
 $RgName = "ArmDemo-SimpleTemplate-RG"
 
@@ -36,3 +41,9 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName `
     -TemplateParameterFile $Parameters.FullName
+
+
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
+    -AsJob

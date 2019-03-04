@@ -18,3 +18,8 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 ## Input validation
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile (Get-Item .\parameterValidation.json).FullName 
+
+### Demo Cleanup
+Remove-AzResourceGroup -Name $RgName `
+    -Force `
+    -AsJob
