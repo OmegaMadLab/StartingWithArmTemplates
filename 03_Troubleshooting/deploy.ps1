@@ -17,7 +17,11 @@ New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
 
 ## Input validation
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
-    -TemplateFile (Get-Item .\parameterValidation.json).FullName 
+    -TemplateFile (Get-Item .\parameterValidation.json).FullName
+
+## Using Output section to test concatenation
+New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
+    -TemplateFile (Get-Item .\testOutput.json).FullName
 
 ### Demo Cleanup
 Remove-AzResourceGroup -Name $RgName `

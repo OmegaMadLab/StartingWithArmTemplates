@@ -1,12 +1,12 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {},
     "functions": [],
     "resources": [
         {
-            "apiVersion": "2016-03-30",
+            "apiVersion": "2018-02-01",
             "name": "firstVNet",
             "location":"[resourceGroup().location]",
             "type": "Microsoft.Network/virtualNetworks",
@@ -25,7 +25,7 @@
             }
         },
         {
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2018-02-01",
             "type":"Microsoft.Network/networkInterfaces",
             "name":"dcNic",
             "location":"[resourceGroup().location]",
@@ -47,7 +47,7 @@
             }
         },
         {
-            "apiVersion": "2015-01-01",
+            "apiVersion": "2017-05-10",
             "type": "Microsoft.Resources/deployments",
             "name": "updateVNet",
             "dependsOn": [
@@ -57,13 +57,13 @@
               "mode": "Incremental",
               "parameters": {},
               "template": {
-                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                 "contentVersion": "1.0.0.0",
                 "parameters": {},
                 "variables": {},
                 "resources": [
                     {
-                        "apiVersion": "2016-03-30",
+                        "apiVersion": "2018-02-01",
                         "name": "firstVNet",
                         "location":"[resourceGroup().location]",
                         "type": "Microsoft.Network/virtualNetworks",

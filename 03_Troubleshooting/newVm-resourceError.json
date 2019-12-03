@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "envPrefix": {
@@ -9,10 +9,10 @@
             }
         },
         "genericVmSize": {
-            "defaultValue": "standard_F2",
+            "defaultValue": "standard_B2s",
             "type": "string",
             "metadata": {      
-                "description": "VM size used for DC, DSC server, Frontend servers"
+                "description": "VM size"
             }
         }, 
         "adminUserName": {
@@ -54,7 +54,7 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[variables('vmName')]",
-            "apiVersion": "2018-04-01",
+            "apiVersion": "2019-03-01",
             "location": "[resourceGroup().location]",
             "properties": {
         

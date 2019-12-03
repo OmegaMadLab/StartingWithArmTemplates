@@ -1,0 +1,105 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "string",
+            "metadata": {      
+                "description": "Prefix for items naming convention"
+            }
+        },
+        "sysAdminUsername": {
+            "type": "string",
+            "metadata": {      
+                "description": "SQL SysAdmin username"
+            }
+        },
+        "sysAdminPassword": {
+            "type": "securestring",
+            "metadata": {      
+                "description": "SQL SysAdmin password"
+            }
+        },
+        "tcpPort": {
+            "type": "int",
+            "metadata": {      
+                "description": "SQL TCP port"
+            }
+        },
+        "maxDop": {
+            "type": "int",
+            "metadata": {      
+                "description": "SQL Max degree of parallelism"
+            }
+        }
+    },
+    "variables": {
+        "dscModuleUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/DSCResources/credSspDsc.zip",
+        "dscConfigScript": "CredSspDsc.ps1",
+        "dscConfigFunction": "CredSspConfig",
+        "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/CSEResources",
+        "cseRunAsScript": "CSE-runAs.ps1",
+        "cseSqlScript": "CSE-sqlConfig.ps1",
+        "cseParameters": "[concat('-Username \"$($ENV:COMPUTERNAME)\\', parameters('sysAdminUsername'), '\" -Password \"', parameters('sysAdminPassword'), '\" -ScriptToRun \"CSE-sqlConfig.ps1\" -ScriptParams \"', parameters('tcpPort'), '\",\"', parameters('maxDop'), '\"')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('vmName'),'/CredSSP')]",
+            "apiVersion": "2019-03-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+        
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.76",
+                "autoUpgradeMinorVersion": false,
+                "settings": {
+                    "configuration": {
+                        "url": "[variables('dscModuleURL')]",
+                        "script": "[variables('dscConfigScript')]",
+                        "function": "[variables('dscConfigFunction')]"
+                    },
+                    "configurationArguments": {
+                    }
+                },
+                "protectedSettings": {
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('vmName'),'/CseSqlConfig')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'CredSSP')]"
+            ],
+            "tags": {
+                "displayName": "CSE-SqlConfig"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[concat(variables('cseBaseUrl'), '/', variables('cseRunAsScript'))]",
+                        "[concat(variables('cseBaseUrl'), '/', variables('cseSqlScript'))]"
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File .\\', variables('cseRunAsScript'), ' ', variables('cseParameters'))]"
+                }
+            }
+        }        
+    ],
+    "outputs": {
+        "CommandLine": {
+           "type": "string",
+           "value": "[concat('powershell -ExecutionPolicy Unrestricted -File .\\', variables('cseRunAsScript'), ' ', variables('cseParameters'))]"
+        }
+    }
+}
