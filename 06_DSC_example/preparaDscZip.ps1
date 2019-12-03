@@ -1,6 +1,3 @@
-# Set execution policy to unrestriced for demo
-Set-ExecutionPolicy "Unrestricted"
-
 # Create a subdirectory to contain DSC config and resources
 New-Item .\DscConfig -ItemType Directory
 

@@ -25,7 +25,6 @@
     // Variables - useful to manage values that doesn't change at each deploy, or calculated values
     // https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-templates-variables
     "variables": {
-      "displayName": "storageaccount1",
       "storageAccountName": "[take(concat(toLower(parameters('storageAccountPrefix')), uniqueString(resourceGroup().id)), 24)]"
     },
     // Functions - you can create custom functions to increase template readability
@@ -46,9 +45,13 @@
           "location": "[resourceGroup().location]",
           "dependsOn":[ ],
           "tags": {
-              "displayName": "[variables('displayName')]"
+              "displayName": "storageaccount1"
           },
           "properties": {
+              /* 
+                Inside the properties block reside all the attributes specific for a resource type.
+                You can omit part of them, if you intend to use default values.
+              */
               "accountType": "[parameters('storageAccountType')]"
           }
       }

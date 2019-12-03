@@ -139,7 +139,6 @@
                         },
                         "protectedSettings": {
                             "configurationArguments": {
-
                                 "DomainCreds": {
                                     "userName": "[parameters('adminUserName')]",
                                     "password": "[parameters('adminPassword')]"
