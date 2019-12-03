@@ -133,13 +133,12 @@
                                 "script": "[variables('adJoinScript')]",
                                 "function": "[variables('adJoinConfigurationFunction')]"
                             },
-                            "configurationArguments": {
-                                "DomainName": "[parameters('domainName')]"
-                            }
-                        },
+                            "configurationArguments": {}    
+                            },
                         "protectedSettings": {
                             "configurationArguments": {
-                                "DomainCreds": {
+                                "DomainName": "[parameters('domainName')]",
+                                "AdminCreds": {
                                     "userName": "[parameters('adminUserName')]",
                                     "password": "[parameters('adminPassword')]"
                                 }
