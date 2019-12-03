@@ -55,7 +55,7 @@
     "variables": {
         "diagStorageName": "[take(concat(toLower(parameters('envPrefix')),'diagsa',uniqueString(resourceGroup().id)),24)]",
         "vmName": "[concat(parameters('envPrefix'),'-VM')]",
-        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_example/DSCResources/ADDomainJoin.ps1.zip",
+        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_DSC_example/DSCResources/ADDomainJoin.ps1.zip",
         "adJoinScript": "ADDomainJoin.ps1",
         "adJoinConfigurationFunction": "ADDomainJoin"
     },
@@ -126,15 +126,14 @@
                         "publisher": "Microsoft.Powershell",
                         "type": "DSC",
                         "typeHandlerVersion": "2.9",
-                        "autoUpgradeMinorVersion": false,
+                        "autoUpgradeMinorVersion": true,
                         "settings": {
                             "configuration": {
                                 "url": "[variables('adJoinModulesURL')]",
                                 "script": "[variables('adJoinScript')]",
                                 "function": "[variables('adJoinConfigurationFunction')]"
-                            },
-                            "configurationArguments": {}    
-                            },
+                            }
+                        },
                         "protectedSettings": {
                             "configurationArguments": {
                                 "DomainName": "[parameters('domainName')]",
