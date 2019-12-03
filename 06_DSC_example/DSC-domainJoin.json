@@ -28,7 +28,7 @@
         }
     },
     "variables": {
-        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_example/DSCResources/ADDomainJoin.ps1.zip",
+        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_DSC_example/DSCResources/ADDomainJoin.ps1.zip",
         "adJoinScript": "ADDomainJoin.ps1",
         "adJoinConfigurationFunction": "ADDomainJoin"
     },
@@ -49,15 +49,12 @@
                         "url": "[variables('adJoinModulesURL')]",
                         "script": "[variables('adJoinScript')]",
                         "function": "[variables('adJoinConfigurationFunction')]"
-                    },
-                    "configurationArguments": {
-                        "DomainName": "[parameters('domainName')]"
-                    }
+                    }
                 },
                 "protectedSettings": {
                     "configurationArguments": {
-
-                        "DomainCreds": {
+                        "DomainName": "[parameters('domainName')]",
+                        "AdminCreds": {
                             "userName": "[parameters('adminUserName')]",
                             "password": "[parameters('adminPassword')]"
                         }

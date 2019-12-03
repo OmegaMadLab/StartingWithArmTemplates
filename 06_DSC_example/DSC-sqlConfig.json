@@ -34,7 +34,7 @@
         }
     },
     "variables": {
-        "sqlConfigModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_example/DSCResources/SqlConfig.ps1.zip",
+        "sqlConfigModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_DSC_example/DSCResources/SqlConfig.ps1.zip",
         "SqlDscConfigScript": "SqlConfig.ps1",
         "SqlDscConfigFunction": "SqlServerConfig"
     },
