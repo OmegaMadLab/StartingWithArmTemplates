@@ -12,7 +12,7 @@
             "defaultValue": "standard_F2",
             "type": "string",
             "metadata": {      
-                "description": "VM size used for DC, DSC server, Frontend servers"
+                "description": "VM size"
             }
         }, 
         "adminUserName": {
@@ -25,6 +25,12 @@
             "type": "securestring",
             "metadata": {      
                 "description": "Local and domain admin password"
+            }
+        },
+        "domainName": {
+            "type": "string",
+            "metadata": {
+                "description": "AD domain name"
             }
         },
         "vnetName": {
@@ -48,12 +54,15 @@
     },
     "variables": {
         "diagStorageName": "[take(concat(toLower(parameters('envPrefix')),'diagsa',uniqueString(resourceGroup().id)),24)]",
-        "vmName": "[concat(parameters('envPrefix'),'-VM')]"
+        "vmName": "[concat(parameters('envPrefix'),'-VM')]",
+        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_example/DSCResources/ADDomainJoin.ps1.zip",
+        "adJoinScript": "ADDomainJoin.ps1",
+        "adJoinConfigurationFunction": "ADDomainJoin"
     },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[variables('vmName1')]",
+            "name": "[variables('vmName')]",
             "apiVersion": "2019-03-01",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -104,7 +113,42 @@
                     }
                 }
             },
-            "resources": [],
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "DomainJoin",
+                    "apiVersion": "2019-03-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Powershell",
+                        "type": "DSC",
+                        "typeHandlerVersion": "2.9",
+                        "autoUpgradeMinorVersion": false,
+                        "settings": {
+                            "configuration": {
+                                "url": "[variables('adJoinModulesURL')]",
+                                "script": "[variables('adJoinScript')]",
+                                "function": "[variables('adJoinConfigurationFunction')]"
+                            },
+                            "configurationArguments": {
+                                "DomainName": "[parameters('domainName')]"
+                            }
+                        },
+                        "protectedSettings": {
+                            "configurationArguments": {
+
+                                "DomainCreds": {
+                                    "userName": "[parameters('adminUserName')]",
+                                    "password": "[parameters('adminPassword')]"
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmName'),'-NIC'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageName'))]"
@@ -113,7 +157,7 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(variables('vmName'),'-NIC')]",
-            "apiVersion": "2017-03-01",
+            "apiVersion": "2019-09-01",
             "location": "[resourceGroup().location]",
             "properties": {
         
@@ -143,7 +187,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[concat(variables('vmName'),'-PIP')]",
-            "apiVersion": "2017-03-01",
+            "apiVersion": "2019-09-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic",

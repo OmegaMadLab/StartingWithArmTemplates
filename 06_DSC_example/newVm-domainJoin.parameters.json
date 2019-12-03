@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "envPrefix": {
-            "value": "ArmDemo02"
+            "value": "ArmDemo01"
         },
         "genericVmSize": {
             "value": "standard_F2"
@@ -13,6 +13,9 @@
         },
         "adminPassword": {
             "value": "Passw0rd1"
+        },
+        "domainName": {
+            "value": "contoso.local"
         },
         "vnetName": {
             "value": "adVnet"

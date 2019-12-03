@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "envPrefix": {
-            "value": "ArmDemo02"
+            "value": "ArmDemo03"
         },
         "genericVmSize": {
             "value": "standard_F2"

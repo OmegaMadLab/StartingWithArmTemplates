@@ -20,7 +20,7 @@ function Set-AzureRg {
                         -ErrorAction SilentlyContinue
 
     if(!$ResourceGroup) {
-        New-AzResourceGroup -Name $RgName -Location "westeurope"
+        New-AzResourceGroup -Name $Name -Location "westeurope"
     }
 
     $ResourceGroup

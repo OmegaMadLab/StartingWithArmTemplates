@@ -9,7 +9,7 @@
             }
         },
         "genericVmSize": {
-            "defaultValue": "standard_F2",
+            "defaultValue": "standard_B2s",
             "type": "string",
             "metadata": {      
                 "description": "VM size used for DC, DSC server, Frontend servers"
@@ -48,12 +48,13 @@
     },
     "variables": {
         "diagStorageName": "[take(concat(toLower(parameters('envPrefix')),'diagsa',uniqueString(resourceGroup().id)),24)]",
-        "vmName": "[concat(parameters('envPrefix'),'-VM')]"
+        "vmName": "[concat(parameters('envPrefix'),'-VM')]",
+        "cseBaseUrl": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/06_CSE_example/CSEResources"
     },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[variables('vmName1')]",
+            "name": "[variables('vmName')]",
             "apiVersion": "2019-03-01",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -104,7 +105,35 @@
                     }
                 }
             },
-            "resources": [],
+            "resources": [
+                {
+                    "apiVersion": "2019-03-01",
+                    "type": "extensions",
+                    "name": "CSEexample",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
+                    ],
+                    "tags": {
+                        "displayName": "CSE-example"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.9",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[concat(variables('cseBaseUrl'), '/TestFile.txt')]",
+                                "[concat(variables('cseBaseUrl'), '/Read-File.ps1')]"
+                            ]
+                        },
+                        "protectedSettings": {
+                            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File Read-File.ps1"
+                        }
+                    }
+                }
+            ],
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmName'),'-NIC'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageName'))]"

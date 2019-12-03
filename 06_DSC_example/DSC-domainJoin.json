@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "string",
+            "metadata": {      
+                "description": "Prefix for items naming convention"
+            }
+        },
+        "adminUserName": {
+            "type": "string",
+            "metadata": {      
+                "description": "Local and domain admin username"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {      
+                "description": "Local and domain admin password"
+            }
+        },
+        "domainName": {
+            "type": "string",
+            "metadata": {
+                "description": "AD domain name"
+            }
+        }
+    },
+    "variables": {
+        "adJoinModulesURL": "https://raw.githubusercontent.com/OmegaMadLab/StartingWithArmTemplates/master/05_DSC_example/DSCResources/ADDomainJoin.ps1.zip",
+        "adJoinScript": "ADDomainJoin.ps1",
+        "adJoinConfigurationFunction": "ADDomainJoin"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('vmName'),'/DomainJoin')]",
+            "apiVersion": "2019-03-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.9",
+                "autoUpgradeMinorVersion": false,
+                "settings": {
+                    "configuration": {
+                        "url": "[variables('adJoinModulesURL')]",
+                        "script": "[variables('adJoinScript')]",
+                        "function": "[variables('adJoinConfigurationFunction')]"
+                    },
+                    "configurationArguments": {
+                        "DomainName": "[parameters('domainName')]"
+                    }
+                },
+                "protectedSettings": {
+                    "configurationArguments": {
+
+                        "DomainCreds": {
+                            "userName": "[parameters('adminUserName')]",
+                            "password": "[parameters('adminPassword')]"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

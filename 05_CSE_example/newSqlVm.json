@@ -2,19 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "envPrefix": {
+        "vmName": {
             "type": "string",
             "metadata": {      
                 "description": "Prefix for items naming convention"
             }
         },
-        "genericVmSize": {
-            "defaultValue": "standard_F2",
-            "type": "string",
-            "metadata": {      
-                "description": "VM size used for DC, DSC server, Frontend servers"
-            }
-        }, 
         "adminUserName": {
             "type": "string",
             "metadata": {      
@@ -26,62 +19,49 @@
             "metadata": {      
                 "description": "Local and domain admin password"
             }
-        },
-        "vnetName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of an existing vnet"
-            }
-        },
-        "subnetName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of an existing subnet"
-            }
-        },
-        "vnetResourceGroup": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the resource group which contains the existing vnet"
-            }
         }
     },
     "variables": {
-        "diagStorageName": "[take(concat(toLower(parameters('envPrefix')),'diagsa',uniqueString(resourceGroup().id)),24)]",
-        "vmName": "[concat(parameters('envPrefix'),'-VM')]"
+        "virtualNetworkName": "[concat(resourceGroup().name, '-SqlVnet')]",
+        "virtualNetworkAddressRange": "10.0.0.0/16",
+        "subnetName": "sqlSubnet",
+        "subnetAddressPrefix": "10.0.0.0/24",
+        "vmSize": "Standard_DS2_v2",
+        "nicName": "[concat(parameters('vmName'), '-NIC')]",
+        "publicIPAddressName": "[concat(parameters('vmName'), '-PIP')]",
+        "diagStorageName": "[take(concat(toLower(parameters('vmName')),'diagsa',uniqueString(resourceGroup().id)),24)]"
     },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[variables('vmName1')]",
+            "name": "[parameters('vmName')]",
             "apiVersion": "2019-03-01",
             "location": "[resourceGroup().location]",
             "properties": {
-        
                 "hardwareProfile": {
-                    "vmSize": "[parameters('genericVmSize')]"
+                    "vmSize": "[variables('vmSize')]"
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2016-Datacenter-smalldisk",
+                        "publisher": "MicrosoftSqlServer",
+                        "offer": "SQL2017-WS2016",
+                        "sku": "SQLDEV",
                         "version": "latest"
                     },
                     "osDisk": {
                         "osType": "Windows",
-                        "name": "[concat(variables('vmName'),'-OsDisk')]",
+                        "name": "[concat(parameters('vmName'),'-OSDISK')]",
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
                             "storageAccountType": "StandardSSD_LRS"
                         },
-                        "diskSizeGB": 64
+                        "diskSizeGB": 128
                     },
                     "dataDisks": []
                 },
                 "osProfile": {
-                    "computerName": "[variables('vmName')]",
+                    "computerName": "[parameters('vmName')]",
                     "adminUsername": "[parameters('adminUserName')]",
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
@@ -93,7 +73,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmName'),'-NIC'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
                         }
                     ]
                 },
@@ -106,13 +86,13 @@
             },
             "resources": [],
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmName'),'-NIC'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageName'))]"
             ]
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat(variables('vmName'),'-NIC')]",
+            "name": "[variables('nicName')]",
             "apiVersion": "2017-03-01",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -123,10 +103,10 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
-                                "id": "[concat(resourceId(parameters('vnetResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('vnetName')), '/subnets/', parameters('subnetName'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
                             },
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('vmName'),'-PIP'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
                             }
                         }
                     }
@@ -137,12 +117,12 @@
                 "enableIPForwarding": false
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('vmName'),'-PIP'))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
             ]
         },
         {
             "type": "Microsoft.Network/publicIPAddresses",
-            "name": "[concat(variables('vmName'),'-PIP')]",
+            "name": "[variables('publicIPAddressName')]",
             "apiVersion": "2017-03-01",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -164,6 +144,27 @@
             "tags": {},
             "properties": {},
             "dependsOn": []
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('virtualNetworkName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('virtualNetworkAddressRange')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnetAddressPrefix')]"
+                        }
+                    }
+                ]
+            }
         }
     ]
 }

@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "hostingPlanName": {
+        "type": "string",
+        "minLength": 1
+      },
+      "webAppName": {
+        "metadata": {
+          "description": "Web application name"
+        },
+        "type": "string"
+      },
+      "environment": {
+          "metadata": {
+            "description": "The environment object of the deployment"
+          },
+          "type": "string",
+          "allowedValues": [
+              "PROD",
+              "TEST"
+          ]
+      }
+    },
+    "variables": {
+      "environmentSettings": {
+          "TEST": [
+            {
+                "skuName": "B1",
+                "skuCapacity": 1,
+                "region": "westeurope"
+            }
+          ],
+          "PROD": [
+            {
+                "skuName": "S1",
+                "skuCapacity": 1,
+                "region": "westeurope"
+            },
+            {
+                "skuName": "S1",
+                "skuCapacity": 1,
+                "region": "northeurope"
+            }
+          ]
+      },
+      "copy": [
+            {
+                "name": "plansRef",
+                "count": "[length(variables('environmentSettings')[parameters('environment')])]",
+                "input": {
+                    "name": "[concat(parameters('hostingPlanName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('plansRef')].region, '-', copyIndex('plansRef'))]",
+                    "id": "[resourceId('Microsoft.Web/serverfarms/', concat(parameters('hostingPlanName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('plansRef')].region, '-', copyIndex('plansRef')))]"
+                }
+            },
+            {
+                "name": "websitesRef",
+                "count": "[length(variables('environmentSettings')[parameters('environment')])]",
+                "input": {
+                    "name": "[concat(parameters('webAppName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('websitesRef')].region, '-', uniqueString(resourceGroup().id))]",
+                    "id": "[resourceId('Microsoft.Web/sites', concat(parameters('webAppName'), '-', variables('environmentSettings')[parameters('environment')][copyIndex('websitesRef')].region, '-', uniqueString(resourceGroup().id)))]"
+                }
+            }
+        ]
+    },
+    "resources": [
+    ],
+    "outputs": {
+        "out": {
+            "type": "string",
+            "value": "[variables('plansRef')[0].name]"
+        },
+        "out2": {
+            "type": "string",
+            "value": "[variables('websitesRef')[0].id]"
+        }
+    }
+  }
+  
