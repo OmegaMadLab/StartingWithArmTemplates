@@ -9,6 +9,17 @@
          "metadata": {
               "description": "The prefix which compose the name of the storage account"
           }
+      },
+      "redundancy": {
+        "type": "string",
+        "metadata": {
+          "description": "A simple tag"
+        },
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_GRS"
+        ],
+        "defaultValue": "Standard_LRS"
       }
     },
     // Variables - useful to manage values that doesn't change at each deploy, or calculated values
@@ -38,7 +49,7 @@
           },
           "kind": "StorageV2",
           "sku": {
-              "name": "Standard_LRS",
+              "name": "[parameters('redundancy')]",
               "tier": "Standard"
           },
           "properties": {
