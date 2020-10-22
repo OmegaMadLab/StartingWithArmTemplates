@@ -1,0 +1,137 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location"
+            },
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "utcValue": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
+        },
+        "sqlAdminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Admin username"
+            }
+        },
+        "sqlAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "SQL Admin password"
+            }
+        },
+        "aadAdminUpn": {
+            "type": "string",
+            "metadata": {
+                "description": "UserPrincipalName of the SQL Server AAD Admin"
+            }
+        },
+        "userAssignedManagedIdentityId": {
+            "type": "string",
+            "metadata": {
+                "description": "The resouce ID of the user-assigned managed identity needed by the deployment script"
+            }
+        }
+    },
+    "variables": {
+        "sqlServerName": "[take(tolower(concat('sqlserver', base64(resourceGroup().id))), 15)]"
+    },
+    "functions": [],
+    "resources": [
+        //DeploymentScript that retrieve admin properties from UPN
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "getAdminProperties",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('userAssignedManagedIdentityId')]": {}
+                }
+            },
+            "properties": {
+                "forceUpdateTag": "[parameters('utcValue')]",
+                "azPowerShellVersion": "3.0",
+                "timeout": "PT1H",
+                "arguments": "[concat('-adminUpn', ' ', parameters('aadAdminUpn'))]",
+                "scriptContent": "
+                    param([string] $adminUpn)
+                    $admin = Get-AzAdUser -UserPrincipalName $adminUpn 
+                    $tenantId = (Get-AzContext).Tenant.Id
+                    $DeploymentScriptOutputs = @{}
+                    $DeploymentScriptOutputs['ADTenantId'] = $tenantId
+                    $DeploymentScriptOutputs['ADObjectId'] = $admin.Id
+                    $DeploymentScriptOutputs['ADLogin'] = $admin.UserPrincipalName
+                ",
+                "cleanupPreference": "Always",
+                "retentionInterval": "P7D"
+            }
+        },
+        //SQL Server with default SQL sysadmin and additional AAD Admin from the deploymentscript output
+        {
+            "name": "[variables('sqlServerName')]",
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2019-06-01-preview",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "sqlServer"
+            },
+            "properties": {
+                "administratorLogin": "[parameters('sqlAdminUsername')]",
+                "administratorLoginPassword": "[parameters('sqlAdminPassword')]"
+            },
+            "resources": [
+                {
+                    "type": "firewallRules",
+                    "apiVersion": "2014-04-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+                    ],
+                    "location": "[resourceGroup().location]",
+                    "name": "AllowAllWindowsAzureIps",
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Sql/servers/administrators",
+            "apiVersion": "2019-06-01-preview",
+            "name": "[concat(variables('sqlServerName'), '/ActiveDirectory')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+                "[resourceId('Microsoft.Resources/deploymentScripts', 'getAdminProperties')]"
+            ],
+            "location": "[resourceGroup().location]",
+                "properties": {
+                    "administratorType": "ActiveDirectory",
+                    "login": "[reference('getAdminProperties').outputs.ADLogin]",
+                    "sid": "[reference('getAdminProperties').outputs.ADObjectId]",
+                    "tenantId": "[reference('getAdminProperties').outputs.ADTenantId]"
+                }    
+        }
+    ],
+    "outputs": {
+        "output1": {
+            "type": "string",
+            "value": "[reference('getAdminProperties').outputs.ADLogin]"
+        },
+        "output2": {
+            "type": "string",
+            "value": "[reference('getAdminProperties').outputs.ADObjectId]"
+        },
+        "output3": {
+            "type": "string",
+            "value": "[reference('getAdminProperties').outputs.ADTenantId]"
+        }
+    }
+}

@@ -10,6 +10,11 @@ $Parameters = Get-Item -Path ".\storageAccount.parameters.json"
 # Define RG 
 $Rg = Set-AzureRg -Name $RgName
 
+# Test deployment with What-If
+New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
+    -TemplateFile $Template.FullName `
+    -WhatIf
+
 # Invoke deployment
 New-AzResourceGroupDeployment -ResourceGroupName $Rg.ResourceGroupName `
     -TemplateFile $Template.FullName
